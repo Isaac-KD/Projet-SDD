@@ -156,7 +156,43 @@ Chaines* lectureChaines(FILE *f) {
     return creer_Chaines(gamma,nbChaines,tmp);;
 }
 
+double longueurChaine(CellChaine *c) {
+    double longueur = 0.0;
+    CellPoint *point = c->points;
+    while (point != NULL && point->suiv != NULL) {
+        double x1 = point->x;
+        double y1 = point->y;
+        double x2 = point->suiv->x;
+        double y2 = point->suiv->y;
+        longueur += sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 
+        point = point->suiv;
+    }
+
+    return longueur;
+}
+
+double longueurTotale(Chaines *C) {
+    double longueurTotale = 0.0;
+    for (int i = 0; i < C->nbChaines; i++) {
+        longueurTotale += longueurChaine(&(C->chaines[i]));
+    }
+    return longueurTotale;
+}
+
+int comptePointsTotal(Chaines *C) {
+    int totalPoints = 0;
+    for (int i = 0; i < C->nbChaines; i++) {
+        CellChaine *chaine = &(C->chaines[i]);
+        CellPoint *point = chaine->points;
+        while (point != NULL) {
+            totalPoints++;
+            point = point->suiv;
+        }
+    }
+
+    return totalPoints;
+}
 
 int main() {
 
