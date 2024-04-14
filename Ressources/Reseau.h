@@ -1,6 +1,11 @@
 #ifndef __RESEAU_H__
 #define __RESEAU_H__
+
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "Chaine.h"
+
 
 typedef struct noeud Noeud;
 
@@ -37,5 +42,6 @@ void ecrireReseau(Reseau *R, FILE *f);
 int nbLiaisons(Reseau *R);
 int nbCommodites(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
+Reseau * creerReseau(int nbNoeuds ,int gamma);
 #endif
 

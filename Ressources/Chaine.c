@@ -1,8 +1,5 @@
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "Chaine.h"
-#define MAX_LINE_LENGTH 1024
+//#define MAX_LINE_LENGTH 1024
 
 
 
@@ -35,7 +32,7 @@ Chaines * creer_Chaines(int gamma,int nbChaines, CellChaine * chaine){
 void ajoute_point_cellpoint(CellPoint **p, double x, double y) {
     CellPoint *new = creer_Cellpoint(x, y);
     CellPoint * tmp = *p;
-    if(! tmp ) tmp = new;
+    if(! tmp ) *p = new;
     else {
         while( tmp->suiv) tmp = tmp->suiv;
         tmp->suiv=new;
@@ -45,7 +42,7 @@ void ajoute_point_cellpoint(CellPoint **p, double x, double y) {
 void ajoute_cellpoint_cellchaine(CellChaine **ch,int numero,CellPoint * p){
     CellChaine *new = creer_Cellchaine(numero,p);
     CellChaine *tmp = *ch;
-    if(! tmp ) tmp = new;
+    if(! tmp ) *ch = new;
     else {
         while( tmp->suiv) tmp = tmp->suiv;
         tmp->suiv=new;
@@ -111,7 +108,7 @@ void affiche_CellChaine(CellChaine *ch,FILE *f) {
 }
 
 void ecrireChaines(Chaines *C,FILE *f) {
-        fprintf(f,"NbChain : %d\nGamma : %d\n",C->nbChaines,C->gamma);
+        fprintf(f,"NbChain: %d\nGamma: %d\n",C->nbChaines,C->gamma);
         affiche_CellChaine(C->chaines,f);
 }
 
@@ -129,6 +126,7 @@ CellChaine * lire_ligne(char * ligne){
         if(i>1) all_nb[i-2]=x;
         i++;
     }
+    
     CellPoint * tmp= creer_Cellpoint(all_nb[0],all_nb[1]);
     for(int j=2; j<2*taille; j+=2) {
         ajoute_point_cellpoint(&tmp,all_nb[j],all_nb[j+1]);
@@ -142,18 +140,23 @@ Chaines* lectureChaines(FILE *f) {
     int nbChaines;
     char ligne[MAX_LINE_LENGTH];
 
+    rewind(f);
+
     if (fgets(ligne, sizeof(ligne), f) != NULL) {
         sscanf(ligne, "NbChain: %d", &nbChaines);
+        //printf(" NBCHAINNNNNNN %d",nbChaines);
     }
     if (fgets (ligne, sizeof(ligne), f) != NULL) {
         sscanf(ligne, "Gamma: %d", &gamma);
+        //printf(" GAMMMAAAA %d",gamma);
     }
+
     CellChaine *tmp = NULL;
     while(fgets(ligne, MAX_LINE_LENGTH, f) != NULL){
         ajoute_cellchaine_cellchaine(&tmp,lire_ligne(ligne));
     }
 
-    return creer_Chaines(gamma,nbChaines,tmp);;
+    return creer_Chaines(gamma,nbChaines,tmp);
 }
 
 double longueurChaine(CellChaine *c) {
@@ -194,14 +197,22 @@ int comptePointsTotal(Chaines *C) {
     return totalPoints;
 }
 
-int main() {
+void changeMinMax(double newx, double newy, double* xmin, double* ymin, double* xmax, double* ymax) {
+    if (newx > *xmax) *xmax = newx;
+    if (newy > *ymax) *ymax = newy;
+    if (newx < *xmin) *xmin = newx;
+    if (newy < *ymin) *ymin = newy;
+}
 
-   FILE *f = fopen("/Users/isaac/Desktop/S4/structure_de_donnée/s5-10_projet/Ressources/00014_burma.cha","r");
-   Chaines * c = lectureChaines(f);
-    ecrireChaines(c,f); 
-    fclose(f);
-    FILE *g = fopen("tmp","w");
-    ecrireChaines(c,g);
-    fclose(g);
-    return 0;
+
+void chaineCoordMinMax(Chaines* C, double* xmin, double*ymin, double* xmax, double* ymax){
+    CellChaine* pch = C->chaines;
+    while(pch){
+        CellPoint*pcn = pch->points;
+        while(pcn){
+            changeMinMax(pcn->x,pcn->y,xmin,ymin,xmax,ymax);
+            pcn=pcn->suiv;
+        }
+        pch=pch->suiv;
+}
 }

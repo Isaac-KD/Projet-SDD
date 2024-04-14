@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "ArbreQuat.h"
 
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX,double coteY){
@@ -147,7 +146,7 @@ Reseau* reconstitueReseauArbre(Chaines* C){
     double coteY = (ymax-ymax); // dimension du cote Y
     /* Creaion des instances*/
     ArbreQuat * a = creerArbreQuat(coteX/2,coteY/2,coteX,coteY);
-    Reseau* R = creerReseau(C->nbChaines,C->gamma);// |||||||| il faut creer la fonction ||||||||
+    Reseau* R = creerReseau(C->nbChaines,C->gamma); // |||||||| il faut creer la fonction ||||||||
 
     /* Parcours de la Chaine*/
     CellChaine * lchaines = C->chaines; 
@@ -161,8 +160,4 @@ Reseau* reconstitueReseauArbre(Chaines* C){
         lchaines = lchaines->suiv;
     }
     return R;
-}
-
-int main(){
-    return 0;
 }

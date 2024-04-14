@@ -1,3 +1,5 @@
+#include "Chaine.h"
+/*
 CellChaine * lire_ligne(FILE * f){
     char ligne[MAX_LINE_LENGTH];
     double numbers[MAX_NUMBERS];
@@ -27,4 +29,16 @@ CellChaine * lire_ligne(FILE * f){
     }
     
     return creer_Cellchaine((int)(numbers[0]),p);
+}
+*/
+int main() {
+
+   FILE *f = fopen("/Users/isaac/Desktop/S4/structure_de_donnée/s5-10_projet/Ressources/00014_burma.cha","r");
+   Chaines * c = lectureChaines(f);
+    ecrireChaines(c,f); 
+    fclose(f);
+    FILE *g = fopen("tmp","w");
+    ecrireChaines(c,g);
+    fclose(g);
+    return 0;
 }

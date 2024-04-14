@@ -1,0 +1,31 @@
+<html><body><svg xmlns="http://www.w3.org/2000/svg" version="1.2" width="100%" height="100%" viewBox="-2 -2 500 500" preserveAspectRatio="yes">
+<g >
+
+<line x1="89.000000" y1="89.000000" x2="45.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="89.000000" y1="89.000000" x2="45.000000" y2="67.000000" style="stroke:black;stroke-width:2"/>
+<line x1="89.000000" y1="89.000000" x2="87.000000" y2="90.000000" style="stroke:black;stroke-width:2"/>
+<line x1="89.000000" y1="89.000000" x2="0.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="0.000000" y1="45.000000" x2="89.000000" y2="89.000000" style="stroke:black;stroke-width:2"/>
+<line x1="0.000000" y1="45.000000" x2="45.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="0.000000" y1="45.000000" x2="45.000000" y2="67.000000" style="stroke:black;stroke-width:2"/>
+<line x1="0.000000" y1="45.000000" x2="87.000000" y2="90.000000" style="stroke:black;stroke-width:2"/>
+<line x1="87.000000" y1="90.000000" x2="89.000000" y2="89.000000" style="stroke:black;stroke-width:2"/>
+<line x1="87.000000" y1="90.000000" x2="0.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="87.000000" y1="90.000000" x2="45.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="87.000000" y1="90.000000" x2="45.000000" y2="67.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="67.000000" x2="89.000000" y2="89.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="67.000000" x2="0.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="67.000000" x2="87.000000" y2="90.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="67.000000" x2="45.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="45.000000" x2="89.000000" y2="89.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="45.000000" x2="0.000000" y2="45.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="45.000000" x2="87.000000" y2="90.000000" style="stroke:black;stroke-width:2"/>
+<line x1="45.000000" y1="45.000000" x2="45.000000" y2="67.000000" style="stroke:black;stroke-width:2"/>
+<circle cx="89.000000" cy="89.000000" r="2" stroke="black" stroke-width="1" fill="green" />
+<circle cx="0.000000" cy="45.000000" r="2" stroke="black" stroke-width="1" fill="green" />
+<circle cx="87.000000" cy="90.000000" r="2" stroke="black" stroke-width="1" fill="green" />
+<circle cx="45.000000" cy="67.000000" r="2" stroke="black" stroke-width="1" fill="green" />
+<circle cx="45.000000" cy="45.000000" r="2" stroke="black" stroke-width="1" fill="green" />
+
+
+</g></svg></body></html>
