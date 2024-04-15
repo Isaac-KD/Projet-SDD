@@ -1,6 +1,7 @@
 #include "ArbreQuat.h"
 
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX,double coteY){
+    printf(" xc: %lf, yc: %lf, coteX: %lf, coteY: %lf\n",xc,yc,coteX,coteY);
     ArbreQuat* new  = (ArbreQuat*) malloc(sizeof(ArbreQuat));
 
     if( new == NULL ){
@@ -160,4 +161,18 @@ Reseau* reconstitueReseauArbre(Chaines* C){
         lchaines = lchaines->suiv;
     }
     return R;
+}
+
+void afficherArbre(ArbreQuat* arbre, int level) {
+    if (arbre == NULL) return;
+    for (int i = 0; i < level; i++) printf("  ");
+    printf("Arbre: Centre=(%.2f, %.2f), Taille=(%.2f, %.2f)\n", arbre->xc, arbre->yc, arbre->coteX, arbre->coteY);
+    if (arbre->noeud != NULL) {
+        for (int i = 0; i < level; i++) printf("  ");
+        printf("Noeud: Position=(%.2f, %.2f)\n", arbre->noeud->x, arbre->noeud->y);
+    }
+    afficherArbre(arbre->se, level + 1);
+    afficherArbre(arbre->so, level + 1);
+    afficherArbre(arbre->ne, level + 1);
+    afficherArbre(arbre->no, level + 1);
 }

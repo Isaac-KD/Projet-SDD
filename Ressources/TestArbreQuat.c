@@ -22,33 +22,7 @@ int main() {
 
     // Affichage pour vérifier la structure de l'arbre
     printf("Structure de l'arbre après insertion:\n");
-    if (arbre->noeud) {
-        printf("Nœud central: (%.2f, %.2f)\n", arbre->noeud->x, arbre->noeud->y);
-    }
-    if (arbre->so && arbre->so->noeud) {
-        printf("Nœud SO: (%.2f, %.2f)\n", arbre->so->noeud->x, arbre->so->noeud->y);
-    }
-    if (arbre->se && arbre->se->noeud) {
-        printf("Nœud SE: (%.2f, %.2f)\n", arbre->se->noeud->x, arbre->se->noeud->y);
-    }
-    if (arbre->no && arbre->no->noeud) {
-        printf("Nœud NO: (%.2f, %.2f)\n", arbre->no->noeud->x, arbre->no->noeud->y);
-    }
-    if (arbre->ne && arbre->ne->noeud) {
-        printf("Nœud NE: (%.2f, %.2f)\n", arbre->ne->noeud->x, arbre->ne->noeud->y);
-    }
-    if (arbre->so  && arbre->so->so->noeud) {
-        printf("Nœud extrême SO: (%.2f, %.2f)\n", arbre->so->so->noeud->x, arbre->so->so->noeud->y);
-    }
-    if (arbre->so && arbre->so->se && arbre->so->se->noeud) {
-        printf("Nœud SO->SE: (%.2f, %.2f)\n", arbre->so->se->noeud->x, arbre->so->se->noeud->y);
-    }
-    if (arbre->so && arbre->so->ne && arbre->so->ne->noeud) {
-        printf("Nœud SO->NE: (%.2f, %.2f)\n", arbre->so->ne->noeud->x, arbre->so->ne->noeud->y);
-    }
-    if (arbre->so && arbre->so->no && arbre->so->no->noeud) {
-        printf("Nœud SO->NO: (%.2f, %.2f)\n", arbre->so->no->noeud->x, arbre->so->no->noeud->y);
-    }
+    afficherArbre(arbre, 0);
 
     // Nettoyage de la mémoire
     free(n1);
