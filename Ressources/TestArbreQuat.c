@@ -42,7 +42,7 @@ void afficherNoeud(Noeud* n) {
 }
 
 void testerRechercheCreeNoeudArbre() {
-    Reseau* R = creerReseau(10,10); // Assurez-vous que cette fonction initialise le réseau correctement.
+    Reseau* R = creerReseau(10); // Assurez-vous que cette fonction initialise le réseau correctement.
     ArbreQuat* arbre = creerArbreQuat(0,0,100,100);
 
     // Test 1: Insertion dans un arbre vide

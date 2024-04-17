@@ -47,6 +47,6 @@ Noeud* creerNoeud(int num, double x, double y);
 CellNoeud * creerCellNoeud( Noeud * n);
 CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB);
 void insererVoisins(Noeud * noeud1, Noeud * noeud2);
-Noeud * insererReseau(Reseau * R, int x, int y);
+Noeud * insererReseau(Reseau * R, double x, double y);
 #endif
 

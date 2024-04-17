@@ -38,7 +38,9 @@ CellNoeud * creerCellNoeud( Noeud * n){
 }
 CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB){
     CellCommodite * commodites = (CellCommodite *) malloc(sizeof(CellCommodite));
-    if( ! commodites) printf(" Erreur allocation commodites \n");return NULL;
+    if( ! commodites){
+        printf(" Erreur allocation commodites \n");return NULL;
+    }
     commodites->extrB = extrB;
     commodites->extrA = extrA;
     commodites->suiv = NULL;
@@ -82,7 +84,7 @@ void insererVoisins(Noeud *noeud1, Noeud *noeud2) {
     noeud2->voisins = new2;
 }
 
-Noeud * insererReseau(Reseau * R, int x, int y){
+Noeud * insererReseau(Reseau * R, double x, double y){
     Noeud * new = (Noeud *) malloc(sizeof(Noeud));
      if (new == NULL) fprintf(stderr, "Erreur d'allocation memoire pour inserer un noeud dans le reseau\n");
     R->nbNoeuds++; // on ajoute +1 au nb de noeuds

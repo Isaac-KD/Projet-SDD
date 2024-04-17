@@ -41,12 +41,13 @@ int main() {
     // Mesure du temps pour reconstitueReseauHachage
     start = clock();
     Reseau *R2 =reconstitueReseauHachage(C, M);
-    printf(" reseaux construit");
+    printf(" reseaux construit\n");
     end = clock();
     if(! R2) printf( "Reseau NULL \n");
     FILE *f = fopen("reseau2","w");
     ecrireReseau(R2,f);
     fclose(f);
+    afficheReseauSVG(R2, "Hachage.html");
 
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     fprintf(file, "Temps pour reconstitueReseauHachage: %f secondes\n", cpu_time_used);

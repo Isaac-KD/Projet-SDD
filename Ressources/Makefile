@@ -1,7 +1,7 @@
 CC = clang
 CFLAGS = -Wall -Wextra -g
 
-all: chaine SVGwriter reseau hachage arbre TestChaine TestArbreQuat main
+all: chaine SVGwriter reseau hachage arbre SVGwriter TestChaine TestArbreQuat main
 
 chaine: Chaine.c Chaine.h 
 	$(CC) $(CFLAGS) -c Chaine.c -o chaine.o 
@@ -18,6 +18,9 @@ hachage: Hachage.c Hachage.h reseau
 arbre: ArbreQuat.c ArbreQuat.h reseau chaine
 	$(CC) $(CFLAGS) -c ArbreQuat.c -o ArbreQuat.o
 
+SVGwriter: SVGwriter.c SVGwriter.h reseau
+	$(CC) $(CFLAGS) -c SVGwriter.c -o SVGwriter.o
+
 TestChaine.o: TestChaine.c
 	$(CC) $(CFLAGS) -c TestChaine.c -o TestChaine.o
 
@@ -31,8 +34,8 @@ TestChaine: TestChaine.o chaine
 TestArbreQuat: TestArbreQuat.o arbre reseau chaine
 	$(CC) $(CFLAGS) -o TestArbreQuat TestArbreQuat.o ArbreQuat.o reseau.o chaine.o
 
-main: main.o arbre reseau chaine hachage
-	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o
+main: main.o arbre reseau chaine hachage SVGwriter
+	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o  SVGwriter.o
 
 clean:
 	rm -f *.o TestChaine TestArbreQuat main

@@ -1,6 +1,7 @@
 #ifndef _SVGWRITER_H_
 #define _SVGWRITER_H_
 
+#include "Reseau.h"
 /* Dans cette librairie, les couleurs sont utilisees sous leur forme
    hexadecimale comme le montre les exemples suivants) */
 
@@ -51,5 +52,6 @@ void SVGline(SVGwriter *svg, double xa, double ya, double xb, double yb);
 
 /* Ferme le fichier */
 void SVGfinalize(SVGwriter *svg);
+
 
 #endif

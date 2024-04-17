@@ -69,3 +69,4 @@ void SVGfinalize(SVGwriter *svg) {
   fclose(svg->file);
   svg->file=NULL;
 }
+
