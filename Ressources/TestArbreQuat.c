@@ -1,39 +1,79 @@
 #include "ArbreQuat.h"
 
-int main() {
-    // Création d'un arbre quaternaire initial, centré en (50, 50) avec une taille de 100x100
-    ArbreQuat* arbre = creerArbreQuat(50, 50, 100, 100);
+void testInsererNoeudArbre(){
+    ArbreQuat* arbre = creerArbreQuat(0.0, 0.0, 100.0, 100.0);
+    Noeud* n1 = creerNoeud(1, -50, -50);
+    Noeud* n2 = creerNoeud(2, 50, -50);
+    Noeud* n3 = creerNoeud(3, -50, 50);
+    Noeud* n4 = creerNoeud(4, 50, 50);
+    Noeud* n5 = creerNoeud(5, -25, -25);
+    Noeud* n6 = creerNoeud(6, 25, -25);
+    Noeud* n7 = creerNoeud(7, -25, 25);
+    Noeud* n8 = creerNoeud(8, 25, 25);
+    Noeud* n9 = creerNoeud(9, 12.5, 12.5);
+    Noeud* n10 = creerNoeud(9, -12.5, 12.5);
+    Noeud* n11 = creerNoeud(9, 12.5,- 12.5);
+    Noeud* n12 = creerNoeud(9, -12.5, -12.5);
+ 
 
-    // Création et insertion de nœuds à différentes positions
-    Noeud* n1 = malloc(sizeof(Noeud)); n1->x = 25; n1->y = 25; n1->voisins = NULL; // Sud-ouest
-    Noeud* n2 = malloc(sizeof(Noeud)); n2->x = 75; n2->y = 25; n2->voisins = NULL; // Sud-est
-    Noeud* n3 = malloc(sizeof(Noeud)); n3->x = 25; n3->y = 75; n3->voisins = NULL; // Nord-ouest
-    Noeud* n4 = malloc(sizeof(Noeud)); n4->x = 75; n4->y = 75; n4->voisins = NULL; // Nord-est
-    Noeud* n5 = malloc(sizeof(Noeud)); n5->x = 0;  n5->y = 0;  n5->voisins = NULL;  // Extrême Sud-ouest
-    Noeud* n6 = malloc(sizeof(Noeud)); n6->x = 50; n6->y = 50; n6->voisins = NULL; // Centre exact
-
-    // Insertion des nœuds
     insererNoeudArbre(n1, &arbre, arbre);
     insererNoeudArbre(n2, &arbre, arbre);
     insererNoeudArbre(n3, &arbre, arbre);
     insererNoeudArbre(n4, &arbre, arbre);
     insererNoeudArbre(n5, &arbre, arbre);
     insererNoeudArbre(n6, &arbre, arbre);
+    insererNoeudArbre(n7, &arbre, arbre);
+    insererNoeudArbre(n8, &arbre, arbre);
+    insererNoeudArbre(n9, &arbre, arbre);
+    insererNoeudArbre(n10, &arbre, arbre);
+    insererNoeudArbre(n11, &arbre, arbre);
+    insererNoeudArbre(n12, &arbre, arbre);
+    insererNoeudArbre(n12, &arbre, arbre);
 
-    // Affichage pour vérifier la structure de l'arbre
-    printf("Structure de l'arbre après insertion:\n");
+    afficherArbre(arbre, 0);
+}
+
+void afficherNoeud(Noeud* n) {
+    if (n != NULL) {
+        printf("Noeud num: %d, X: %f, Y: %f\n", n->num, n->x, n->y);
+    } else {
+        printf("Noeud non trouvé.\n");
+    }
+}
+
+void testerRechercheCreeNoeudArbre() {
+    Reseau* R = creerReseau(10,10); // Assurez-vous que cette fonction initialise le réseau correctement.
+    ArbreQuat* arbre = creerArbreQuat(0,0,100,100);
+
+    // Test 1: Insertion dans un arbre vide
+    Noeud* n1 = rechercheCreeNoeudArbre(R, &arbre, arbre, 50.0, 50.0);
+    printf("Test 1 - Insertion dans un arbre vide:\n");
+    afficherNoeud(n1);
     afficherArbre(arbre, 0);
 
-    // Nettoyage de la mémoire
-    free(n1);
-    free(n2);
-    free(n3);
-    free(n4);
-    free(n5);
-    free(n6);
-    // Ajouter ici la libération des autres sous-arbres si nécessaire
-    free(arbre);
+    // Test 2: Insertion dans une feuille
+    Noeud* n2 = rechercheCreeNoeudArbre(R, &arbre, arbre, -30.0, -30.0);
+    printf("Test 2 - Insertion à une feuille existante:\n");
+    afficherNoeud(n2);
+    afficherArbre(arbre, 0);
 
+    // Test 3: Vérification de l'existence du noeud
+    Noeud* n3 = rechercheCreeNoeudArbre(R, &arbre, arbre, 50.0, 50.0);
+    printf("Test 3 - Vérification de l'existence du noeud:\n");
+    afficherNoeud(n3);
+    afficherArbre(arbre, 0);
+
+    // Test 4: Insertion dans une cellule interne
+    Noeud* n4 = rechercheCreeNoeudArbre(R, &arbre, arbre, 60.0, 60.0);
+    printf("Test 4 - Insertion dans une cellule interne:\n");
+    afficherNoeud(n4);
+    afficherArbre(arbre, 0);
+}
+
+int main() {
+    testInsererNoeudArbre();
+
+    //testerRechercheCreeNoeudArbre() ;
     return 0;
 }
 

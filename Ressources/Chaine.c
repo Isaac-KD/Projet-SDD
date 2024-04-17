@@ -214,5 +214,6 @@ void chaineCoordMinMax(Chaines* C, double* xmin, double*ymin, double* xmax, doub
             pcn=pcn->suiv;
         }
         pch=pch->suiv;
-}
+    }
+    printf("minx = %lf, ymin = %lf, xmax = %lf, ymax = %lf",*xmin,*ymin,*xmax,*ymax);
 }

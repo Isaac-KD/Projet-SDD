@@ -15,7 +15,7 @@ reseau: Reseau.c Reseau.h chaine
 hachage: Hachage.c Hachage.h reseau
 	$(CC) $(CFLAGS) -c Hachage.c -o hachage.o
 
-arbre: ArbreQuat.c ArbreQuat.h reseau
+arbre: ArbreQuat.c ArbreQuat.h reseau chaine
 	$(CC) $(CFLAGS) -c ArbreQuat.c -o ArbreQuat.o
 
 TestChaine.o: TestChaine.c
@@ -35,4 +35,4 @@ main: main.o arbre reseau chaine hachage
 	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o
 
 clean:
-	rm -f *.o TestChaine TestArbreQuat
+	rm -f *.o TestChaine TestArbreQuat main

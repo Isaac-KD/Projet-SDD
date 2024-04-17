@@ -13,7 +13,86 @@ Reseau * creerReseau(int nbNoeuds ,int gamma){
     return new;
 }
 
+Noeud* creerNoeud(int num, double x, double y) {
+    Noeud* nouveau = (Noeud*)malloc(sizeof(Noeud));
+    if (!nouveau) {
+        fprintf(stderr, "Erreur d'allocation mémoire pour un nouveau noeud\n");
+        return NULL;
+    }
+    nouveau->num = num;
+    nouveau->x = x;
+    nouveau->y = y;
+    nouveau->voisins = NULL;
+    return nouveau;
+}
+
+CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB){
+    CellCommodite * commodites = (CellCommodite *) malloc(sizeof(CellCommodite));
+    if( ! commodites) printf(" Erreur allocation commodites \n"); exit(EXIT_FAILURE);
+    commodites->extrB = extrB;
+    commodites->extrA = extrA;
+    commodites->suiv = NULL;
+    return commodites;
+}
+void insererVoisins(Noeud *noeud1, Noeud *noeud2) {
+    if (!noeud1 || !noeud2)
+        return; // Si l'un des noeuds est NULL, sortie de la fonction
+
+    // Vérification si les noeuds sont déjà voisins
+    CellNoeud *tmp1 = noeud1->voisins;
+    while (tmp1) {
+        if (tmp1->nd->num == noeud2->num)
+            return; // Les noeuds sont déjà voisins, sortie de la fonction
+        tmp1 = tmp1->suiv;
+    }
+
+    // Allocation de mémoire pour les nouveaux voisins
+    CellNoeud *new1 = (CellNoeud *)malloc(sizeof(CellNoeud));
+    CellNoeud *new2 = (CellNoeud *)malloc(sizeof(CellNoeud));
+
+    if (!new1 || !new2) {
+        // Affichage de l'erreur d'allocation
+        printf("Erreur allocation CellNoeud \n");
+
+        // Libération de la mémoire allouée jusqu'à présent
+        if (new1) free(new1);
+        if (new2) free(new2);
+
+        return; // Sortie de la fonction en cas d'échec d'allocation
+    }
+
+    // Initialisation des nouveaux voisins
+    new1->nd = noeud2;
+    new2->nd = noeud1;
+
+    // Ajout des nouveaux voisins à la liste des voisins des deux nœuds
+    new1->suiv = noeud1->voisins;
+    new2->suiv = noeud2->voisins;
+    noeud1->voisins = new1;
+    noeud2->voisins = new2;
+}
+
+Noeud * insererReseau(Reseau * R, int x, int y){
+    Noeud * new = (Noeud *) malloc(sizeof(Noeud));
+     if (new == NULL) fprintf(stderr, "Erreur d'allocation memoire pour inserer un noeud dans le reseau\n");
+    R->nbNoeuds++; // on ajoute +1 au nb de noeuds
+
+    new->num = R->nbNoeuds; 
+    new->x =x; // on creer un noeud
+    new->y =y;
+    new->voisins = NULL;
+
+    /* On ajoute le noeud a reseaux */
+    CellNoeud * new_cell_noeud = (CellNoeud *) malloc(sizeof(CellNoeud));
+    new_cell_noeud->nd = new;
+    new_cell_noeud->suiv = R->noeuds ;
+    R->noeuds = new_cell_noeud; 
+
+    return new;
+}
+
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
+    if(! R) printf("Erreur rechercheCreeNoeudListe R est NULL\n"); return NULL;
     CellNoeud *noeud = R->noeuds;
     while(noeud != NULL){
         if(noeud->nd->x == x && noeud->nd->y == y){

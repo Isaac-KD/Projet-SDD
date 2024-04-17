@@ -43,5 +43,9 @@ int nbLiaisons(Reseau *R);
 int nbCommodites(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
 Reseau * creerReseau(int nbNoeuds ,int gamma);
+Noeud* creerNoeud(int num, double x, double y);
+CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB);
+void insererVoisins(Noeud * noeud1, Noeud * noeud2);
+Noeud * insererReseau(Reseau * R, int x, int y);
 #endif
 
