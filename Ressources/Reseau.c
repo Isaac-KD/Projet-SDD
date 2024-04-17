@@ -1,12 +1,12 @@
 #include "Reseau.h"
 
 
-Reseau * creerReseau(int nbNoeuds ,int gamma){
+Reseau * creerReseau(int gamma){
     Reseau * new = (Reseau *) malloc(sizeof(Reseau));
     if (new == NULL) {
         fprintf(stderr, "Erreur d'allocation memoire pour le reseau\n");
     }
-    new->nbNoeuds = nbNoeuds;
+    new->nbNoeuds = 0;
     new->gamma = gamma;
     new->noeuds = NULL ;
     new->commodites = NULL;
@@ -26,9 +26,19 @@ Noeud* creerNoeud(int num, double x, double y) {
     return nouveau;
 }
 
+CellNoeud * creerCellNoeud( Noeud * n){
+    CellNoeud *nouveau = malloc(sizeof(CellNoeud));
+    if (nouveau == NULL) {
+        fprintf(stderr, "Erreur d'allocation mémoire pour un nouveau CellNoeud\n");
+        return NULL;
+    }
+    nouveau->nd = n;
+    nouveau->suiv = NULL;
+    return nouveau;
+}
 CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB){
     CellCommodite * commodites = (CellCommodite *) malloc(sizeof(CellCommodite));
-    if( ! commodites) printf(" Erreur allocation commodites \n"); exit(EXIT_FAILURE);
+    if( ! commodites) printf(" Erreur allocation commodites \n");return NULL;
     commodites->extrB = extrB;
     commodites->extrA = extrA;
     commodites->suiv = NULL;

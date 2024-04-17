@@ -101,7 +101,7 @@ Reseau* reconstitueReseauArbre(Chaines* C){
     printf(" coteX : %f , coteY : %f\n", coteX, coteY);
     /* Creaion des instances*/
     ArbreQuat * a = creerArbreQuat(coteX/2,coteY/2,coteX,coteY);
-    Reseau* R = creerReseau(C->nbChaines,C->gamma);
+    Reseau* R = creerReseau(C->gamma);
 
     /* Parcours de la Chaine*/
     CellChaine * chaines = C->chaines; 

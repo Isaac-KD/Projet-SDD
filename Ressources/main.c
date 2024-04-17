@@ -6,6 +6,8 @@
 #include <time.h>
 
 int main() {
+
+    int M = 10;
     printf(" Strat \n");
     FILE *src = fopen("00014_burma.cha", "r");
     if (src == NULL) {
@@ -31,17 +33,21 @@ int main() {
     
     // Mesure du temps pour reconstitueReseauArbre
     start = clock();
-    printf("ok\n");
-    reconstitueReseauArbre(C);
-    printf("Reseau passedddddddddddddddddd \n ");
+    //reconstitueReseauArbre(C);
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     fprintf(file, "Temps pour reconstitueReseauArbre: %f secondes\n", cpu_time_used);
 
     // Mesure du temps pour reconstitueReseauHachage
     start = clock();
-    //Reseau *R2 =reconstitueReseauHachage(C, M);
+    Reseau *R2 =reconstitueReseauHachage(C, M);
+    printf(" reseaux construit");
     end = clock();
+    if(! R2) printf( "Reseau NULL \n");
+    FILE *f = fopen("reseau2","w");
+    ecrireReseau(R2,f);
+    fclose(f);
+
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     fprintf(file, "Temps pour reconstitueReseauHachage: %f secondes\n", cpu_time_used);
 
