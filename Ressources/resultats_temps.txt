@@ -1,3 +1,3 @@
-Temps pour reconstitueReseauArbre: 0.000003 secondes
-Temps pour reconstitueReseauHachage: 0.000018 secondes
-Temps pour reconstitueReseauListe: 0.000001 secondes
+Temps pour reconstitueReseauArbre: 0.000011 secondes
+Temps pour reconstitueReseauHachage: 0.000034 secondes
+Temps pour reconstitueReseauListe: 0.000002 secondes

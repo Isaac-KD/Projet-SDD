@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "StructListe.h"  
+#include "Struct_File.h"  
 #include "Reseau.h"
 typedef struct {
     int u, v;  // Numéros des sommets extrémité
@@ -29,10 +29,13 @@ typedef struct {
     Sommet **T_som;    /* Tableau de pointeurs sur sommets */
     int gamma;  
     int nbcommod;      /* Nombre de commodités */
-    Commod *T_commod;  /* Tableau des commodités */
+   Commod *T_commod; /* Tableau des commodités */
 } Graphe;
 
 // Déclarations de fonctions pour manipuler des graphes
+Arete* creeArete(int u  ,int v);
+Cellule_arete* creeCellule_arete( Arete * a);
+Sommet* creeSommet(int num,double x,double y);
 Graphe *creerGraphe(Reseau *r); 
 //int cheminPlusCourt(Graphe *g, int u, int v); 
 //ListeEntiers *retrouverChemin(Graphe *g, int u, int v);
