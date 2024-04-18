@@ -52,4 +52,4 @@ main: main.o arbre reseau chaine hachage SVGwriter
 	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o  SVGwriter.o
 
 clean:
-	rm -f *.o TestChaine TestArbreQuat main
+	rm -f *.o TestChaine TestArbreQuat TestGraphe  main 

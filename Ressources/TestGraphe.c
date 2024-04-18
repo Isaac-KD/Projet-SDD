@@ -7,6 +7,7 @@ int main(void){
     Chaines* C = lectureChaines(f);
     fclose(f);
     Reseau* R = reconstitueReseauHachage(C,10);
+    printf(" il faut %d\n",reorganiseReseau(R));
     FILE* h = fopen("reecriture","w");
     ecrireReseau(R,h);
     fclose(h);
@@ -28,11 +29,14 @@ int main(void){
         }
         printf("\n");
     }
-    for( int i=1; i<=g->nbsom;i++){
+    /*for( int i=1; i<=g->nbsom;i++){
         for(int j=1; j<=g->nbsom;j++){
             int s = cheminPlusCourt(g,i,j);
             printf(" U=%d V=%d plus court chemin = %d\n",j,i,s2);
         }
     }
+    */
+    afficheListe(retrouverChemin(g,6,12));
+    afficheListe(retrouverChemin(g,12,6));
     return 0;
 }

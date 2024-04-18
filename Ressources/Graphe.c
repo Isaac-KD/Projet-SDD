@@ -200,3 +200,125 @@ int cheminPlusCourt(Graphe *g, int u, int v) {
     free(queue);
     return -1;  // Si aucun chemin n'a été trouvé, retourner -1
 }
+
+void ajouterEnTete(Liste **tete, int valeur) {
+    Liste *nouveauNoeud = malloc(sizeof(Liste));
+    nouveauNoeud->valeur = valeur;
+    nouveauNoeud->suiv = *tete;
+    *tete = nouveauNoeud;
+}
+
+void libereListe(Liste *tete) {
+    Liste *temp;
+    while (tete != NULL) {
+        temp = tete;
+        tete = tete->suiv;
+        free(temp);  // Libère la mémoire allouée pour le nœud
+    }
+}
+
+void afficheListe(Liste *tete) {
+    printf("Chemin du plus court: ");
+    while (tete != NULL) {
+        printf("%d ", tete->valeur);  // Affiche la valeur du nœud courant
+        tete = tete->suiv;  // Passe au nœud suivant
+    }
+    printf("\n");  // Ajoute un retour à la ligne à la fin de l'affichage
+}
+
+Liste* retrouverChemin(Graphe *g, int u, int v){
+    if (g == NULL || u < 1 || v < 1 || u > g->nbsom || v > g->nbsom) {
+        return NULL;  // Retourne NULL si les paramètres sont invalides
+    }
+
+    int *distance = malloc((g->nbsom + 1) * sizeof(int));  // Tableau des distances
+    int *predecesseur = malloc((g->nbsom + 1) * sizeof(int));  // Tableau des prédécesseurs
+    if (distance == NULL || predecesseur == NULL) {
+        perror("Erreur d'allocation");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 1; i <= g->nbsom; i++) {
+        distance[i] = -1;  // Initialisation à -1 indiquant non visité
+        predecesseur[i] = -1;  // Aucun prédécesseur au départ
+    }
+
+    int *file = malloc((g->nbsom + 1) * sizeof(int));  // File pour BFS
+    int debut = 0, fin = 0;
+    file[fin++] = u;  // Enfile u
+    distance[u] = 0;  // Distance à u est 0
+
+    while (debut != fin) {  // Tant que la file n'est pas vide
+        int sommetCourant = file[debut++];  // Défile un sommet
+        Cellule_arete *courant = g->T_som[sommetCourant]->L_voisin;  // Parcourt les voisins
+
+        while (courant) {
+            int voisin = (courant->a->u == sommetCourant) ? courant->a->v : courant->a->u;
+            if (distance[voisin] == -1) {  // Si non visité
+                distance[voisin] = distance[sommetCourant] + 1;  // Met à jour la distance
+                predecesseur[voisin] = sommetCourant;  // Enregistre le prédécesseur
+                file[fin++] = voisin;  // Enfile le voisin
+                if (voisin == v) {  // Si le voisin est v
+                    Liste *chemin = NULL;
+                    // Construit le chemin en remontant par les prédécesseurs
+                    for (int at = v; at != -1; at = predecesseur[at]) {
+                        ajouterEnTete(&chemin, at);
+                    }
+                    free(distance);
+                    free(predecesseur);
+                    free(file);
+                    return chemin;  // Retourne le chemin trouvé
+                }
+            }
+            courant = courant->suiv;  // Passe au voisin suivant
+        }
+    }
+
+    free(distance);
+    free(predecesseur);
+    free(file);
+    return NULL;  // Si aucun chemin n'a été trouvé, retourne NULL
+}
+int reorganiseReseau(Reseau* r){
+    printf("step 0\n");
+    Graphe* g = creerGraphe(r);
+    printf("graphe cree \n");
+    /* Creation de la matrice */
+    int TAILLE = g->nbsom;
+    int matrice[TAILLE][TAILLE];
+    printf("matrice cree  TAILLE =%d\n",TAILLE);
+    
+    for (int k = 0; k < TAILLE; k++) {
+        printf(" i=%d",k);
+        for (int j = 0; j < TAILLE; j++) {
+            printf(" j=%d",j);
+            matrice[k][j] = 0;
+        }
+    }
+    printf("step 1");
+    /* On prend tout les chemin depuis chaque commoditer */
+  for(int i = 0; i < g->nbcommod; i++) {
+        int prec = -1;
+        Commod commod = g->T_commod[i];
+        Liste* l = retrouverChemin(g,commod.e1, commod.e2);
+        Liste*tmp=l;
+        printf("step 2");
+        while(l){
+            int val = l->valeur;
+            if(prec == -1){
+                continue;
+            }
+            printf(" prec= %d , val =%d\n", prec, val);
+            matrice[prec][val]+=1;
+            matrice[val][prec]+=1;
+            /* on verfie si il y a plus de gamma chaine qui passe par une arrete */
+            if( matrice[prec][val] > g->gamma || matrice[val][prec] > g->gamma) return 0;
+            l=l->suiv;
+            prec = val;
+        }
+        libereListe(tmp);
+    }
+
+
+return 1;
+}
