@@ -46,7 +46,7 @@ TestArbreQuat: TestArbreQuat.o arbre reseau chaine
 	$(CC) $(CFLAGS) -o TestArbreQuat TestArbreQuat.o ArbreQuat.o reseau.o chaine.o
 
 TestGraphe: TestGraphe.o reseau chaine hachage graphe
-	$(CC) $(CFLAGS) -o TestGraphe TestGraphe.o hachage.o reseau.o chaine.o Graphe.o
+	$(CC) $(CFLAGS) -o TestGraphe TestGraphe.o hachage.o reseau.o chaine.o Graphe.o Struct_File.o
 
 main: main.o arbre reseau chaine hachage SVGwriter
 	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o  SVGwriter.o
