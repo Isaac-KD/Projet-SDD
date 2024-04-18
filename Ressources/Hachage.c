@@ -17,9 +17,7 @@ Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage*H, double x, double y){
     
     /* Verification de si le noeud est deja present */
     while (liste) {
-        printf("tour x=%lf y=%lf  nd->x= %lf nd->y = %lf\n",x,y,liste->nd->x,liste->nd->y);
         if (liste->nd->x == x && liste->nd->y == y) {
-            printf(" verification x=%lf y=%lf\n",x,y);
             return liste->nd;  // Noeud déjà présent, on ne l'ajoute pas
         }
         liste = liste->suiv;

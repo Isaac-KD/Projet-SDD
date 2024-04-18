@@ -62,5 +62,11 @@ int main() {
     fclose(file);
 
     printf(" Finish \n");
+
+    Chaines *CA = generationAleatoire(10,20,200,200);
+    printf("CA = %p \n",CA);
+    FILE * g = fopen("tmpAleatoire","w");
+    ecrireChaines(CA,g);
+    fclose(g);
     return 0;
 }

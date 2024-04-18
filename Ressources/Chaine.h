@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include<time.h>
 
 #define MAX_LINE_LENGTH 1024
 
@@ -53,4 +54,5 @@ int comptePointsTotal(Chaines *C);
 void changeMinMax(double newx, double newy, double* xmin, double* ymin, double* xmax, double* ymax);
 void chaineCoordMinMax(Chaines* C, double* xmin, double*ymin, double* xmax, double* ymax);
 
+ Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax);
 #endif	

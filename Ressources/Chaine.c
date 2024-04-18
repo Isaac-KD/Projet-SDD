@@ -217,3 +217,21 @@ void chaineCoordMinMax(Chaines* C, double* xmin, double*ymin, double* xmax, doub
     }
     printf("minx = %lf, ymin = %lf, xmax = %lf, ymax = %lf",*xmin,*ymin,*xmax,*ymax);
 }
+
+Chaines *generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ymax) {
+    srand(time(NULL));  // Initialisation du générateur de nombres aléatoires
+
+    CellChaine *chaines = NULL;
+    for (int i = 0; i < nbChaines; i++) {
+        CellPoint *points = NULL;
+        for (int j = 0; j < nbPointsChaine; j++) {
+            double x = (rand() / (double)RAND_MAX) * xmax;
+            double y = (rand() / (double)RAND_MAX) * ymax;
+            ajoute_point_cellpoint(&points, x, y);  // Ajout du point à la liste des points
+        }
+        CellChaine *nouvelleChaine = creer_Cellchaine(i + 1, points);  // Crée une nouvelle chaîne avec les points générés
+        ajoute_cellchaine_cellchaine(&chaines, nouvelleChaine);  // Ajoute la nouvelle chaîne à la liste des chaînes
+    }
+    int gamma = 0;  // Définir gamma si nécessaire, sinon utiliser une valeur par défaut
+    return creer_Chaines(gamma, nbChaines, chaines);
+}
