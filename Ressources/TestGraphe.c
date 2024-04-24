@@ -7,7 +7,6 @@ int main(void){
     Chaines* C = lectureChaines(f);
     fclose(f);
     Reseau* R = reconstitueReseauHachage(C,10);
-    printf(" il faut %d\n",reorganiseReseau(R));
     FILE* h = fopen("reecriture","w");
     ecrireReseau(R,h);
     fclose(h);
@@ -38,5 +37,6 @@ int main(void){
     */
     afficheListe(retrouverChemin(g,6,12));
     afficheListe(retrouverChemin(g,12,6));
+    printf(" il faut %d\n",reorganiseReseau(R));
     return 0;
 }
