@@ -1,5 +1,5 @@
 #include "ArbreQuat.h"
-
+#import <math.h>
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX,double coteY){
     //printf(" xc: %lf, yc: %lf, coteX: %lf, coteY: %lf\n",xc,yc,coteX,coteY);
     ArbreQuat* new  = (ArbreQuat*) malloc(sizeof(ArbreQuat));
@@ -32,9 +32,9 @@ void insererNoeudArbre(Noeud* n, ArbreQuat** a, ArbreQuat* parent) {
     /* Cas feuilles */
     if ((*a)->noeud != NULL) {
         printf("  feuille\n");
-        // Cas d'une feuille : transformer en noeud interne et réinsérer les noeuds
+        // Cas d'une feuille : transformer en noe dud interne et réinsérer les noeuds
         Noeud* actuel = (*a)->noeud;
-        if (actuel->x == n->x && actuel->y == n->y) return; // éviter les doublons
+        if (sqrt(actuel->x* n->x + actuel->y *n->y) <= pow(10,-4)) return; // éviter les doublons
 
         (*a)->noeud = NULL;
         insererNoeudArbre(actuel, a, parent);
@@ -68,19 +68,27 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
     /* Cas feuilles */
     if ((*a)->noeud != NULL) {
         printf("feuille ABR \n");
-        if ((*a)->noeud->x == x && (*a)->noeud->y == y) return (*a)->noeud;
+        if (sqrt(((*a)->noeud->x - x )*((*a)->noeud->x - x )+ ((*a)->noeud->y -y)*((*a)->noeud->y -y))<= pow(10,-4)) return (*a)->noeud;
         Noeud* new = insererReseau(R, x, y);
         insererNoeudArbre(new, a, parent);
         return new;
     }
     // Pas besoin de vérifier `*a != NULL` ici car couvert par les cas précédents
-    if (x < (*a)->xc) {
-        printf("noeud interne ABR \n");
-        return (y < (*a)->yc) ? rechercheCreeNoeudArbre(R, &((*a)->so), *a, x, y) :
-                                rechercheCreeNoeudArbre(R, &((*a)->no), *a, x, y);
-    } else {
-        return (y < (*a)->yc) ? rechercheCreeNoeudArbre(R, &((*a)->se), *a, x, y) :
-                                rechercheCreeNoeudArbre(R, &((*a)->ne), *a, x, y);
+     if (x < (*a)->xc && y < (*a)->yc) // so
+    {
+        return rechercheCreeNoeudArbre(R, &((*a)->so), *a, x, y);
+    }
+    else if (x >= (*a)->xc && y < (*a)->yc) // se
+    {
+        return rechercheCreeNoeudArbre(R, &((*a)->se), *a, x, y);
+    }
+    else if (x < (*a)->xc && y >= (*a)->yc) // no
+    {
+        return rechercheCreeNoeudArbre(R, &((*a)->no), *a, x, y);
+    }
+    else // ne
+    {
+        return rechercheCreeNoeudArbre(R, &((*a)->ne), *a, x, y);
     }
     printf("Erreur dans rechercherCreeNoeudArbre \n");
     return NULL;

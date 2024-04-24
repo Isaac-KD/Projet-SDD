@@ -15,9 +15,10 @@ void testInsererNoeudArbre(){
     Noeud* n11 = creerNoeud(9, 12.5,- 12.5);
     Noeud* n12 = creerNoeud(9, -12.5, -12.5);
  
-
-    insererNoeudArbre(n1, &arbre, arbre);
-    insererNoeudArbre(n2, &arbre, arbre);
+    ArbreQuat * abr=arbre;
+    insererNoeudArbre(n1, &abr, arbre);
+    insererNoeudArbre(n2, &abr, arbre);
+    /*
     insererNoeudArbre(n3, &arbre, arbre);
     insererNoeudArbre(n4, &arbre, arbre);
     insererNoeudArbre(n5, &arbre, arbre);
@@ -29,7 +30,7 @@ void testInsererNoeudArbre(){
     insererNoeudArbre(n11, &arbre, arbre);
     insererNoeudArbre(n12, &arbre, arbre);
     insererNoeudArbre(n12, &arbre, arbre);
-
+*/
     afficherArbre(arbre, 0);
 }
 
@@ -44,28 +45,28 @@ void afficherNoeud(Noeud* n) {
 void testerRechercheCreeNoeudArbre() {
     Reseau* R = creerReseau(10); // Assurez-vous que cette fonction initialise le réseau correctement.
     ArbreQuat* arbre = creerArbreQuat(0,0,100,100);
-
+    ArbreQuat*abr = arbre;
     // Test 1: Insertion dans un arbre vide
-    Noeud* n1 = rechercheCreeNoeudArbre(R, &arbre, arbre, 50.0, 50.0);
+    Noeud* n1 = rechercheCreeNoeudArbre(R, &abr, arbre, 50.0, 50.0);
     printf("Test 1 - Insertion dans un arbre vide:\n");
     afficherNoeud(n1);
     afficherArbre(arbre, 0);
 
     // Test 2: Insertion dans une feuille
-    Noeud* n2 = rechercheCreeNoeudArbre(R, &arbre, arbre, -30.0, -30.0);
+    Noeud* n2 = rechercheCreeNoeudArbre(R, &abr, arbre, -30.0, -30.0);
     printf("Test 2 - Insertion à une feuille existante:\n");
     afficherNoeud(n2);
     afficherArbre(arbre, 0);
 
     // Test 3: Vérification de l'existence du noeud
-    Noeud* n3 = rechercheCreeNoeudArbre(R, &arbre, arbre, 50.0, 50.0);
+    Noeud* n3 = rechercheCreeNoeudArbre(R, &abr, arbre, 50.0, 50.0);
     printf("Test 3 - Vérification de l'existence du noeud:\n");
     afficherNoeud(n3);
     afficherArbre(arbre, 0);
 
     // Test 4: Insertion dans une cellule interne
-    Noeud* n4 = rechercheCreeNoeudArbre(R, &arbre, arbre, 60.0, 60.0);
     printf("Test 4 - Insertion dans une cellule interne:\n");
+    Noeud* n4 = rechercheCreeNoeudArbre(R, &abr, arbre, 45.0, 45.0);
     afficherNoeud(n4);
     afficherArbre(arbre, 0);
 }
@@ -73,7 +74,7 @@ void testerRechercheCreeNoeudArbre() {
 int main() {
     testInsererNoeudArbre();
 
-    //testerRechercheCreeNoeudArbre() ;
+    testerRechercheCreeNoeudArbre() ;
     return 0;
 }
 
