@@ -1,5 +1,5 @@
 #include "Reseau.h"
-
+#import <math.h>
 
 Reseau * creerReseau(int gamma){
     Reseau * new = (Reseau *) malloc(sizeof(Reseau));
@@ -107,7 +107,9 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
     if(! R) printf("Erreur rechercheCreeNoeudListe R est NULL\n"); return NULL;
     CellNoeud *noeud = R->noeuds;
     while(noeud != NULL){
-        if(noeud->nd->x == x && noeud->nd->y == y){
+        /*calcule la distance euclidienne entre les 2 points ,car la comparaison n'est pas precise car c'est des double*/
+        if(sqrt((noeud->nd->x-x)*(noeud->nd->x-x) +  (noeud->nd->y-y)*(noeud->nd->y-y))<=pow(10,-4)) 
+        {
             return noeud->nd;
         }
         noeud = noeud->suiv;
@@ -192,6 +194,7 @@ Reseau* reconstitueReseauListe(Chaines *C) {
 }
 
 int nbCommodites(Reseau *R) {
+    // simple parcours de listes
     int nbCommodites = 0;
     CellCommodite *commodite = R->commodites;
     while (commodite != NULL) {

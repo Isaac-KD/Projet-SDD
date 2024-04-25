@@ -1,0 +1,7 @@
+faire tout les test de Reseau
+
+fait les fonction de test pour hashage 
+
+ameliorer test de arbre
+
+changer le lambda dans la fonction de genration aleatoire de chaine
