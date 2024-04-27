@@ -18,7 +18,7 @@ Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage*H, double x, double y){
     /* Verification de si le noeud est deja present */
     while (liste) {
         /*calcule la distance euclidienne entre les 2 points ,car la comparaison n'est pas precise car c'est des double*/
-        if(sqrt((noeud->nd->x-x)*(noeud->nd->x-x) +  (noeud->nd->y-y)*(noeud->nd->y-y))<=pow(10,-4))
+        if(sqrt((liste->nd->x-x)*(liste->nd->x-x) +  (liste->nd->y-y)*(liste->nd->y-y))<=pow(10,-4))
         {
             return liste->nd;  // Noeud déjà présent, on ne l'ajoute pas
         }

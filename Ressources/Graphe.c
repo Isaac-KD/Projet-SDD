@@ -279,46 +279,45 @@ Liste* retrouverChemin(Graphe *g, int u, int v){
     free(file);
     return NULL;  // Si aucun chemin n'a été trouvé, retourne NULL
 }
-int reorganiseReseau(Reseau* r){
-    printf("step 0\n");
+
+
+int reorganiseReseau(Reseau* r) {
     Graphe* g = creerGraphe(r);
-    printf("graphe cree \n");
-    /* Creation de la matrice */
-    int TAILLE = g->nbsom;
-    int matrice[TAILLE][TAILLE];
-    printf("matrice cree  TAILLE =%d\n",TAILLE);
-    
-    for (int k = 0; k < TAILLE; k++) {
-        printf(" i=%d",k);
-        for (int j = 0; j < TAILLE; j++) {
-            printf(" j=%d",j);
-            matrice[k][j] = 0;
-        }
+    int **utilisationArete = (int**)calloc(g->nbsom, sizeof(int*));
+    for (int i = 0; i < g->nbsom; i++) {
+        utilisationArete[i] = (int*)calloc(g->nbsom, sizeof(int));
     }
-    printf("step 1");
-    /* On prend tout les chemin depuis chaque commoditer */
-  for(int i = 0; i < g->nbcommod; i++) {
-        int prec = -1;
-        Commod commod = g->T_commod[i];
-        Liste* l = retrouverChemin(g,commod.e1, commod.e2);
-        Liste*tmp=l;
-        printf("step 2");
-        while(l){
-            int val = l->valeur;
-            if(prec == -1){
-                continue;
+
+    // Calculer les chemins les plus courts et vérifier immédiatement l'utilisation des arêtes
+    for (int i = 0; i < g->nbcommod; i++) {
+        Liste* chemin = retrouverChemin(g, g->T_commod[i].e1, g->T_commod[i].e2);
+        int prev = -1;
+        while (chemin) {
+            if (prev != -1) {
+                int u = prev;
+                int v = chemin->valeur;
+                utilisationArete[u][v]++;
+                // Vérifier la surcharge immédiatement après mise à jour
+                if (utilisationArete[u][v] > g->gamma) {
+                    // Libération de la mémoire si nécessaire avant de retourner
+                    for (int j = 0; j < g->nbsom; j++) {
+                        free(utilisationArete[j]);
+                    }
+                    free(utilisationArete);
+                    return 0;  // Faux, arête surchargée
+                }
             }
-            printf(" prec= %d , val =%d\n", prec, val);
-            matrice[prec][val]+=1;
-            matrice[val][prec]+=1;
-            /* on verfie si il y a plus de gamma chaine qui passe par une arrete */
-            if( matrice[prec][val] > g->gamma || matrice[val][prec] > g->gamma) return 0;
-            l=l->suiv;
-            prec = val;
+            prev = chemin->valeur;
+            chemin = chemin->suiv;
         }
-        libereListe(tmp);
     }
 
-
-return 1;
+    // Libération de la mémoire
+    for (int j = 0; j < g->nbsom; j++) {
+        free(utilisationArete[j]);
+    }
+    free(utilisationArete);
+    
+    return 1;  // Vrai, aucune arête surchargée
 }
+

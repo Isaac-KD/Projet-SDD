@@ -28,13 +28,8 @@ int main(void){
         }
         printf("\n");
     }
-    /*for( int i=1; i<=g->nbsom;i++){
-        for(int j=1; j<=g->nbsom;j++){
-            int s = cheminPlusCourt(g,i,j);
-            printf(" U=%d V=%d plus court chemin = %d\n",j,i,s2);
-        }
-    }
-    */
+    printf("reorganise resaux %d",reorganiseReseau(R));
+
     afficheListe(retrouverChemin(g,6,12));
     afficheListe(retrouverChemin(g,12,6));
     printf(" il faut %d\n",reorganiseReseau(R));

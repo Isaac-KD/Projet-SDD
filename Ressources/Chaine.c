@@ -232,6 +232,7 @@ Chaines *generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ym
         CellChaine *nouvelleChaine = creer_Cellchaine(i + 1, points);  // Crée une nouvelle chaîne avec les points générés
         ajoute_cellchaine_cellchaine(&chaines, nouvelleChaine);  // Ajoute la nouvelle chaîne à la liste des chaînes
     }
-    int gamma = 0;  // Définir gamma si nécessaire, sinon utiliser une valeur par défaut
+
+    int gamma = 1+(int)(rand()%20);  // Valeur du gamma non preciser , genartion d'un valeur entre 1 et 20
     return creer_Chaines(gamma, nbChaines, chaines);
 }
