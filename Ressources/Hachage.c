@@ -86,6 +86,5 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
         // On passe a la chaine suivant
         chaine=chaine->suiv;  
     }
-  printf("Reseaux est %p\n",R);
     return R;
 }

@@ -215,7 +215,6 @@ void chaineCoordMinMax(Chaines* C, double* xmin, double*ymin, double* xmax, doub
         }
         pch=pch->suiv;
     }
-    printf("minx = %lf, ymin = %lf, xmax = %lf, ymax = %lf",*xmin,*ymin,*xmax,*ymax);
 }
 
 Chaines *generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ymax) {

@@ -104,7 +104,9 @@ Noeud * insererReseau(Reseau * R, double x, double y){
 }
 
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
-    if(! R) printf("Erreur rechercheCreeNoeudListe R est NULL\n"); return NULL;
+    if(! R) {
+        printf("Erreur rechercheCreeNoeudListe R est NULL\n");
+        return NULL;}
     CellNoeud *noeud = R->noeuds;
     while(noeud != NULL){
         /*calcule la distance euclidienne entre les 2 points ,car la comparaison n'est pas precise car c'est des double*/
@@ -153,7 +155,7 @@ Reseau* reconstitueReseauListe(Chaines *C) {
 
     // Parcourir chaque chaîne dans la liste des chaînes
     for (int i = 0; i < C->nbChaines; i++) {
-        CellChaine *chaine = &(C->chaines[i]);
+        CellChaine *chaine = C->chaines;
         CellPoint *point = chaine->points;
         Noeud *prevNoeud = NULL;
 

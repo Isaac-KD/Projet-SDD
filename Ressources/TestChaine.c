@@ -230,6 +230,37 @@ void test_chaineCoordMinMax() {
     printf("test_chaineCoordMinMax passed.\n");
 }
 
+void test_generationAleatoire() {
+    int nbChaines = 5;
+    int nbPointsChaine = 10;
+    int xmax = 100;
+    int ymax = 100;
+
+    // Appel de la fonction à tester
+    Chaines *result = generationAleatoire(nbChaines, nbPointsChaine, xmax, ymax);
+
+    // Test de l'intégrité des chaînes générées
+    assert(result != NULL);
+    assert(result->nbChaines == nbChaines);
+    assert(result->gamma >= 1 && result->gamma <= 20);
+
+    // Itération sur chaque chaîne
+    CellChaine *chaineCourante = result->chaines;
+    for (int i = 0; i < nbChaines; i++) {
+        assert(chaineCourante != NULL);
+        CellPoint *pointCourant = chaineCourante->points;
+        
+        // Itération sur chaque point de la chaîne
+        for (int j = 0; j < nbPointsChaine; j++) {
+            assert(pointCourant != NULL);
+            assert(pointCourant->x >= 0 && pointCourant->x <= xmax);
+            assert(pointCourant->y >= 0 && pointCourant->y <= ymax);
+            pointCourant = pointCourant->suiv;
+        }
+        chaineCourante = chaineCourante->suiv;
+    }
+}
+
 int main() {
     test_creer_Cellpoint();
     test_creer_Cellchaine();
@@ -244,6 +275,7 @@ int main() {
     test_comptePointsTotal();
     test_changeMinMax();
     test_chaineCoordMinMax();
+    test_generationAleatoire();
     FILE *f = fopen("00014_burma.cha","r");
     Chaines * c = lectureChaines(f);
     ecrireChaines(c,f); 
@@ -251,6 +283,8 @@ int main() {
     FILE *g = fopen("tmp","w");
     ecrireChaines(c,g);
     fclose(g);
+
+    printf("Tous les tests sont passés avec succès.\n");
     return 0;
 
 }

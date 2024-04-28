@@ -19,7 +19,6 @@ ArbreQuat* creerArbreQuat(double xc, double yc, double coteX,double coteY){
 void insererNoeudArbre(Noeud* n, ArbreQuat** a, ArbreQuat* parent) {
     /* Cas arbre vide */
     if (*a == NULL) {
-        printf("  arbre vide\n");
         // Créer un nouvel arbre si l'arbre actuel est vide
         double moitieCoteX = parent->coteX / 2;
         double moitieCoteY = parent->coteY / 2;
@@ -31,7 +30,6 @@ void insererNoeudArbre(Noeud* n, ArbreQuat** a, ArbreQuat* parent) {
     }
     /* Cas feuilles */
     if ((*a)->noeud != NULL) {
-        printf("  feuille\n");
         // Cas d'une feuille : transformer en noe dud interne et réinsérer les noeuds
         Noeud* actuel = (*a)->noeud;
         if (sqrt(actuel->x* n->x + actuel->y *n->y) <= pow(10,-4)) return; // éviter les doublons
@@ -43,7 +41,6 @@ void insererNoeudArbre(Noeud* n, ArbreQuat** a, ArbreQuat* parent) {
     }
 
     /* Cas  noeud interne */
-    printf("  noeud interne \n");
     if (n->x < (*a)->xc) {
         if (n->y < (*a)->yc)
             insererNoeudArbre(n, &((*a)->so), *a);
@@ -60,14 +57,12 @@ void insererNoeudArbre(Noeud* n, ArbreQuat** a, ArbreQuat* parent) {
 Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, double x, double y) {
      /* Cas arbre vide */
     if (*a == NULL) {
-        printf("arbre vide ABR\n");
         Noeud* n = insererReseau(R, x, y);
         insererNoeudArbre(n, a, parent);
         return n;
     }
     /* Cas feuilles */
     if ((*a)->noeud != NULL) {
-        printf("feuille ABR \n");
         if (sqrt(((*a)->noeud->x - x )*((*a)->noeud->x - x )+ ((*a)->noeud->y -y)*((*a)->noeud->y -y))<= pow(10,-4)) return (*a)->noeud;
         Noeud* new = insererReseau(R, x, y);
         insererNoeudArbre(new, a, parent);
@@ -98,7 +93,6 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
 
 
 Reseau* reconstitueReseauArbre(Chaines* C){
-    printf("debut \n");
     double xmin = INFINITY;  // Utilisez INFINITY défini dans <math.h>
     double ymin = INFINITY;
     double xmax = -INFINITY;
@@ -106,20 +100,16 @@ Reseau* reconstitueReseauArbre(Chaines* C){
     chaineCoordMinMax(C,&xmin,&ymin,&xmax,&ymax); // recuprer le min et le max d'une chaine
     double coteX = (xmax-xmin); // dimension du cote X
     double coteY = (ymax-ymin); // dimension du cote Y
-    printf(" coteX : %f , coteY : %f\n", coteX, coteY);
     /* Creaion des instances*/
     ArbreQuat * a = creerArbreQuat(coteX/2,coteY/2,coteX,coteY);
     Reseau* R = creerReseau(C->gamma);
 
     /* Parcours de la Chaine*/
     CellChaine * chaines = C->chaines; 
-    printf("initialisation reseaux \n");
     while(chaines){
         // On prend le noeud extrA de la commodite 
         CellPoint * point = chaines->points;
-        printf(" extrA\n");
         Noeud * extrA = rechercheCreeNoeudArbre(R,&a,a,point->x,point->y);
-        printf("fin extrA \n");
         /* Si il n'y a que 1 point dans la chaine*/
         if( ! point->suiv){
             Noeud * extrB = extrA;
@@ -128,33 +118,23 @@ Reseau* reconstitueReseauArbre(Chaines* C){
             R->commodites = commodites;
             continue;
         }
-        printf("etape 2 \n");
         Noeud * prec = extrA; // instance utliser pour assosier des voisins
         point = point->suiv;
         /*On parcours la liste des noeuds.
         On s'arrete un noeud avant la fin pour pouvoir obtenir l'extrB */
-        int i = 1;
         while(point->suiv){
-            printf("etape boucle %d \n",i);
             Noeud * tmp = rechercheCreeNoeudArbre(R,&a,a,point->x,point->y);
-            printf("fin rechercCree \n");
             insererVoisins(prec,tmp);
-            printf(" fin insererVoisns\n");
             prec = tmp;
             point = point->suiv;
-            i++;
         }
-        printf(" extrB \n");
         Noeud * extrB = rechercheCreeNoeudArbre(R,&a,a,point->x,point->y);
-        printf("fin rechercCree B \n");
         insererVoisins(extrB,prec);
-        printf(" fin insererVoisns B\n");
         /* Gestion des commodites */
         CellCommodite * commodites = creerCellCommodite(extrA,extrB);
         commodites->suiv = R->commodites;
         R->commodites = commodites;
-        
-        printf(" new chaine \n");
+
         chaines = chaines->suiv;
     }
     return R;
