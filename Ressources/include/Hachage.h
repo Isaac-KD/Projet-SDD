@@ -15,5 +15,5 @@ int h( int k,int M);
 int f( int x, int y );
 Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage*H, double x, double y);
 Reseau* reconstitueReseauHachage(Chaines *C, int M);
-
+void libererTableHachage(TableHachage* H) ;
 #endif

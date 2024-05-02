@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g
 
-all: chaine SVGwriter reseau hachage arbre SVGwriter TestChaine TestArbreQuat main Struct_File graphe TestGraphe TestReseau MesurePerformance ChaineMain ReconstitueReseau
+all: chaine SVGwriter reseau hachage arbre SVGwriter TestChaine TestArbreQuat main Struct_File graphe TestGraphe TestReseau MesurePerformance ChaineMain ReconstitueReseau TestHachage
 
 SVGwriter: src/SVGwriter.c include/SVGwriter.h 
 	$(CC) $(CFLAGS) -c src/SVGwriter.c -o SVGwriter.o
@@ -36,6 +36,9 @@ TestGraphe.o: tests/TestGraphe.c
 TestReseau.o: tests/TestReseau.c
 	$(CC) $(CFLAGS) -c tests/TestReseau.c -o TestReseau.o
 
+TestHachage.o: tests/TestHachage.c
+	$(CC) $(CFLAGS) -c tests/TestHachage.c -o TestHachage.o
+
 MesurePerformance.o: src/MesurePerformance.c
 	$(CC) $(CFLAGS) -c src/MesurePerformance.c -o MesurePerformance.o
 
@@ -60,6 +63,9 @@ TestGraphe: TestGraphe.o reseau chaine hachage graphe
 TestReseau: TestReseau.o reseau chaine 
 	$(CC) $(CFLAGS) -o TestReseau TestReseau.o reseau.o chaine.o SVGwriter.o
 
+TestHachage: TestHachage.o reseau chaine hachage
+	$(CC) $(CFLAGS) -o TestHachage TestHachage.o reseau.o chaine.o SVGwriter.o hachage.o 
+
 MesurePerformance: MesurePerformance.o reseau arbre hachage
 	$(CC) $(CFLAGS) -o MesurePerformance MesurePerformance.o reseau.o chaine.o hachage.o ArbreQuat.o SVGwriter.o
 
@@ -73,7 +79,7 @@ main: main.o arbre reseau chaine hachage SVGwriter
 	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o SVGwriter.o
 
 clean:
-	rm -f *.o TestChaine TestArbreQuat TestGraphe main MesurePerformance TestReseau tmp tmpAleatoire ChaineMain SVGwriter ReconstitueReseau 
+	rm -f *.o TestChaine TestArbreQuat TestGraphe main MesurePerformance TestReseau tmp tmpAleatoire ChaineMain SVGwriter ReconstitueReseau TestHachage
 
 cleanDoc:
 	rm -f exo1.3.html reconstitueReseauArbre.html reconstitueReseauHachage.html reconstitueReseauListe.html

@@ -88,3 +88,15 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
     }
     return R;
 }
+
+void libererTableHachage(TableHachage* H) {
+    if (H == NULL) return;  // Vérification de sécurité
+
+    // Boucle pour parcourir chaque emplacement de la table
+    for (int i = 0; i < H->tailleMax; i++) {
+        CellNoeud* courant = H->T[i];  // Pointeur pour parcourir chaque liste chaînée
+        liberer_tous_les_noeuds(courant);
+    }
+    free(H->T);  // Libérer le tableau de pointeurs
+    free(H);     // Libérer la structure de la table de hachage elle-même
+}

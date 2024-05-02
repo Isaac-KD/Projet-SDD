@@ -100,7 +100,7 @@ int main() {
     test_creerCellCommodite();
     test_rechercheCreeNoeudListe();
     test_insererReseau();
-    test_reconstitueReseauListe();
+    test_reconstitueReseauListe(); //test aussin nbLiaisons et nbCommodites
 
     printf("Tous les tests sont passés avec succès.\n");
 

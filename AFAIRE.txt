@@ -1,4 +1,5 @@
-6.4 avec le main
-fonction de liberation
 
+test nbLiaisons et nbCommodites Reseaux
+testhasahge
+test reconstituarbre
 verifier le -lm si on import la bib math.h
