@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "Struct_File.h"
+#include "../include/Struct_File.h"
 
 void Init_file(S_file *f){
   f->tete=NULL;

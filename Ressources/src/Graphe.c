@@ -1,4 +1,4 @@
-#include "Graphe.h"
+#include "../include/Graphe.h"
 
 Arete* creeArete(int u  ,int v){
     Arete * new = (Arete *) malloc(sizeof(Arete));

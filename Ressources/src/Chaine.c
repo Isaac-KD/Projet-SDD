@@ -1,7 +1,4 @@
-#include "Chaine.h"
-//#define MAX_LINE_LENGTH 1024
-
-
+#include "../include/Chaine.h"
 
 CellPoint * creer_Cellpoint(double x, double y){
     CellPoint * p = malloc(sizeof(CellPoint));
@@ -29,12 +26,35 @@ Chaines * creer_Chaines(int gamma,int nbChaines, CellChaine * chaine){
     return ch;
 }
 
+void libereCellPoint(CellPoint *p){
+    while(p){
+        CellPoint*tmp = p->suiv;
+        free(p);
+        p=tmp;
+    }
+    free(p);
+}
+
+void libereCellChaine(CellChaine *p){
+    while(p){
+        CellChaine* tmp = p->suiv;
+        libereCellPoint(p->points);
+        free(p);
+        p=tmp;
+    }
+    free(p);
+}
+
+void libereChaines(Chaines *p){
+    libereCellChaine(p->chaines);
+    free(p);
+}
 void ajoute_point_cellpoint(CellPoint **p, double x, double y) {
     CellPoint *new = creer_Cellpoint(x, y);
     CellPoint * tmp = *p;
     if(! tmp ) *p = new;
     else {
-        while( tmp->suiv) tmp = tmp->suiv;
+        while( tmp->suiv) tmp = tmp->suiv;  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
         tmp->suiv=new;
     }
 }
@@ -44,7 +64,7 @@ void ajoute_cellpoint_cellchaine(CellChaine **ch,int numero,CellPoint * p){
     CellChaine *tmp = *ch;
     if(! tmp ) *ch = new;
     else {
-        while( tmp->suiv) tmp = tmp->suiv;
+        while( tmp->suiv) tmp = tmp->suiv;  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
         tmp->suiv=new;
     }
 }
@@ -55,10 +75,12 @@ void ajoute_cellchaine_cellchaine(CellChaine **src,CellChaine *new){
         *src = new;
         return;
         }
-    while(ch->suiv){ 
-        ch=ch->suiv;
+    else { 
+        while(ch->suiv){  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
+            ch=ch->suiv;
         }
-    ch->suiv=new;
+        ch->suiv=new;
+    }
 }
 
 
@@ -139,24 +161,58 @@ Chaines* lectureChaines(FILE *f) {
     int gamma;
     int nbChaines;
     char ligne[MAX_LINE_LENGTH];
-
-    rewind(f);
+    rewind(f);// on ce place au debut du fichier
 
     if (fgets(ligne, sizeof(ligne), f) != NULL) {
         sscanf(ligne, "NbChain: %d", &nbChaines);
-        //printf(" NBCHAINNNNNNN %d",nbChaines);
     }
     if (fgets (ligne, sizeof(ligne), f) != NULL) {
         sscanf(ligne, "Gamma: %d", &gamma);
-        //printf(" GAMMMAAAA %d",gamma);
     }
-
     CellChaine *tmp = NULL;
     while(fgets(ligne, MAX_LINE_LENGTH, f) != NULL){
         ajoute_cellchaine_cellchaine(&tmp,lire_ligne(ligne));
     }
-
     return creer_Chaines(gamma,nbChaines,tmp);
+}
+
+void afficheChaineSVG(Chaines *C, char* nomInstance){
+    double maxx=0,maxy=0,minx=1e6,miny=1e6;
+    CellChaine *ccour;
+    CellPoint *pcour;
+    double precx,precy;
+    SVGwriter svg;
+    ccour=C->chaines;
+    while (ccour!=NULL){
+        pcour=ccour->points;
+        while (pcour!=NULL){
+            if (maxx<pcour->x) maxx=pcour->x;
+            if (maxy<pcour->y) maxy=pcour->y;
+            if (minx>pcour->x) minx=pcour->x;
+            if (miny>pcour->y) miny=pcour->y;  
+            pcour=pcour->suiv;
+        }
+    ccour=ccour->suiv;
+    }
+    SVGinit(&svg,nomInstance,500,500);
+    ccour=C->chaines;
+    while (ccour!=NULL){
+        pcour=ccour->points;
+        SVGlineRandColor(&svg);
+        SVGpoint(&svg,500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny)); 
+        precx=pcour->x;
+        precy=pcour->y;  
+        pcour=pcour->suiv;
+        while (pcour!=NULL){
+            SVGline(&svg,500*(precx-minx)/(maxx-minx),500*(precy-miny)/(maxy-miny),500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny));
+            SVGpoint(&svg,500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny));
+            precx=pcour->x;
+            precy=pcour->y;    
+            pcour=pcour->suiv;
+        }
+        ccour=ccour->suiv;
+    }
+    SVGfinalize(&svg);
 }
 
 double longueurChaine(CellChaine *c) {

@@ -1,4 +1,4 @@
-#include "Reseau.h"
+#include "../include/Reseau.h"
 #import <math.h>
 
 Reseau * creerReseau(int gamma){
@@ -46,6 +46,55 @@ CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB){
     commodites->suiv = NULL;
     return commodites;
 }
+
+/* Fonction pour libérer une liste de CellNoeud */
+void liberer_liste_CellNoeud(CellNoeud *liste) {
+    CellNoeud *tmp;
+    while (liste != NULL) {
+        tmp = liste;
+        liste = liste->suiv;
+        free(tmp);
+    }
+}
+
+/* Fonction pour libérer un noeud et sa liste de voisins */
+void liberer_noeud(Noeud *noeud) {
+    if (noeud != NULL) {
+        liberer_liste_CellNoeud(noeud->voisins);
+        free(noeud);
+    }
+}
+
+/* Fonction pour libérer une liste de CellCommodite */
+void liberer_liste_CellCommodite(CellCommodite *liste) {
+    CellCommodite *tmp;
+    while (liste != NULL) {
+        tmp = liste;
+        liste = liste->suiv;
+        free(tmp);
+    }
+}
+
+/* Fonction pour libérer tous les noeuds dans la liste de noeuds du réseau */
+void liberer_tous_les_noeuds(CellNoeud *liste) {
+    CellNoeud *current;
+    while (liste != NULL) {
+        current = liste;
+        liste = liste->suiv;
+        liberer_noeud(current->nd);
+        free(current);
+    }
+}
+
+/* Fonction pour libérer le réseau */
+void liberer_reseau(Reseau *reseau) {
+    if (reseau != NULL) {
+        liberer_tous_les_noeuds(reseau->noeuds);
+        liberer_liste_CellCommodite(reseau->commodites);
+        free(reseau);
+    }
+}
+
 void insererVoisins(Noeud *noeud1, Noeud *noeud2) {
     if (!noeud1 || !noeud2)
         return; // Si l'un des noeuds est NULL, sortie de la fonction
@@ -153,45 +202,39 @@ Reseau* reconstitueReseauListe(Chaines *C) {
     R->gamma = C->gamma;
     R->nbNoeuds = 0; // Initialiser le nombre de nœuds à zéro
 
-    // Parcourir chaque chaîne dans la liste des chaînes
-    for (int i = 0; i < C->nbChaines; i++) {
-        CellChaine *chaine = C->chaines;
-        CellPoint *point = chaine->points;
-        Noeud *prevNoeud = NULL;
-
-        // Parcourir chaque point de la chaîne
-        while (point != NULL) {
-            // Rechercher ou créer un nœud correspondant au point actuel
-            Noeud *noeud = rechercheCreeNoeudListe(R, point->x, point->y);
-
-            // Ajouter le nœud à la liste des nœuds du réseau
-            if (prevNoeud != NULL) {
-                // Ajouter une liaison entre le nœud précédent et le nœud actuel
-                CellNoeud *celluleVoisin = (CellNoeud*)malloc(sizeof(CellNoeud));
-                if (celluleVoisin == NULL) {
-                    fprintf(stderr, "Erreur d'allocation mémoire pour une nouvelle cellule de nœud\n");
-                    exit(EXIT_FAILURE);
-                }
-                celluleVoisin->nd = noeud;
-                celluleVoisin->suiv = prevNoeud->voisins;
-                prevNoeud->voisins = celluleVoisin;
-
-                // Ajouter une liaison dans l'autre sens
-                celluleVoisin = (CellNoeud*)malloc(sizeof(CellNoeud));
-                if (celluleVoisin == NULL) {
-                    fprintf(stderr, "Erreur d'allocation mémoire pour une nouvelle cellule de nœud\n");
-                    exit(EXIT_FAILURE);
-                }
-                celluleVoisin->nd = prevNoeud;
-                celluleVoisin->suiv = noeud->voisins;
-                noeud->voisins = celluleVoisin;
-            }
-
-            prevNoeud = noeud;
+    /* Parcours de la Chaine*/
+    CellChaine * chaines = C->chaines; 
+    while(chaines){
+        // On prend le noeud extrA de la commodite 
+        CellPoint * point = chaines->points;
+        Noeud * extrA = rechercheCreeNoeudListe(R,point->x,point->y);
+        /* Si il n'y a que 1 point dans la chaine*/
+        if( ! point->suiv){
+            Noeud * extrB = extrA;
+            CellCommodite * commodites = creerCellCommodite(extrA,extrB);
+            commodites->suiv = R->commodites;
+            R->commodites = commodites;
+            continue;
+        }
+        Noeud * prec = extrA; // instance utliser pour assosier des voisins
+        point = point->suiv;
+        /*On parcours la liste des noeuds.
+        On s'arrete un noeud avant la fin pour pouvoir obtenir l'extrB */
+        while(point->suiv){
+            Noeud * tmp =rechercheCreeNoeudListe(R,point->x,point->y);
+            insererVoisins(prec,tmp);
+            prec = tmp;
             point = point->suiv;
         }
-    }
+        Noeud * extrB = rechercheCreeNoeudListe(R,point->x,point->y);
+        insererVoisins(extrB,prec);
+        /* Gestion des commodites */
+        CellCommodite * commodites = creerCellCommodite(extrA,extrB);
+        commodites->suiv = R->commodites;
+        R->commodites = commodites;
 
+        chaines = chaines->suiv;
+    }
     return R;
 }
 

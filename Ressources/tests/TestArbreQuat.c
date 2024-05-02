@@ -1,4 +1,4 @@
-#include "ArbreQuat.h"
+#include "../include/ArbreQuat.h"
 
 void testInsererNoeudArbre(){
     ArbreQuat* arbre = creerArbreQuat(0.0, 0.0, 100.0, 100.0);
@@ -11,14 +11,13 @@ void testInsererNoeudArbre(){
     Noeud* n7 = creerNoeud(7, -25, 25);
     Noeud* n8 = creerNoeud(8, 25, 25);
     Noeud* n9 = creerNoeud(9, 12.5, 12.5);
-    Noeud* n10 = creerNoeud(9, -12.5, 12.5);
-    Noeud* n11 = creerNoeud(9, 12.5,- 12.5);
-    Noeud* n12 = creerNoeud(9, -12.5, -12.5);
+    Noeud* n10 = creerNoeud(10, -12.5, 12.5);
+    Noeud* n11 = creerNoeud(11, 12.5,- 12.5);
+    Noeud* n12 = creerNoeud(12, -12.5, -12.5);
  
     ArbreQuat * abr=arbre;
     insererNoeudArbre(n1, &abr, arbre);
     insererNoeudArbre(n2, &abr, arbre);
-    /*
     insererNoeudArbre(n3, &arbre, arbre);
     insererNoeudArbre(n4, &arbre, arbre);
     insererNoeudArbre(n5, &arbre, arbre);
@@ -30,7 +29,6 @@ void testInsererNoeudArbre(){
     insererNoeudArbre(n11, &arbre, arbre);
     insererNoeudArbre(n12, &arbre, arbre);
     insererNoeudArbre(n12, &arbre, arbre);
-*/
     afficherArbre(arbre, 0);
 }
 

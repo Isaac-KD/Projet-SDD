@@ -1,7 +1,4 @@
-faire tout les test de Reseau
+6.4 avec le main
+fonction de liberation
 
-fait les fonction de test pour hashage 
-
-ameliorer test de arbre
-
-changer le lambda dans la fonction de genration aleatoire de chaine
+verifier le -lm si on import la bib math.h

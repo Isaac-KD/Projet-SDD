@@ -1,6 +1,6 @@
-#include "Graphe.h"
-#include "Chaine.h"
-#include "Hachage.h"
+#include "../include/Graphe.h"
+#include "../include/Chaine.h"
+#include "../include/Hachage.h"
 
 int main(void){
     FILE* f = fopen("00014_burma.cha", "r");

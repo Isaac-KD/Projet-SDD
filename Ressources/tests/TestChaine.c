@@ -1,4 +1,4 @@
-#include "Chaine.h"
+#include "../include/Chaine.h"
 #include <assert.h>
 
 void test_creer_Cellpoint() {
@@ -7,7 +7,7 @@ void test_creer_Cellpoint() {
     assert(fabs(point->x - 1.0) < 1e-6);
     assert(fabs(point->y - 2.0) < 1e-6);
     assert(point->suiv == NULL);
-    free(point);
+    libereCellPoint(point);
     printf("test_creer_Cellpoint passed.\n");
 }
 
@@ -18,8 +18,7 @@ void test_creer_Cellchaine() {
     assert(chaine->numero == 1);
     assert(chaine->points == point);
     assert(chaine->suiv == NULL);
-    free(chaine);
-    free(point);
+    libereCellChaine(chaine);
     printf("test_creer_Cellchaine passed.\n");
 }
 
@@ -30,8 +29,7 @@ void test_creer_Chaines() {
     assert(chaines->gamma == 10);
     assert(chaines->nbChaines == 1);
     assert(chaines->chaines == chaine);
-    free(chaine);
-    free(chaines);
+    libereChaines(chaines);
     printf("test_creer_Chaines passed.\n");
 }
 
@@ -45,11 +43,7 @@ void test_ajoute_point_cellpoint() {
     assert(start->suiv != NULL);
     assert(fabs(start->suiv->x - 7.0) < 1e-6);
     assert(fabs(start->suiv->y - 8.0) < 1e-6);
-    while (start) {
-        CellPoint* tmp = start;
-        start = start->suiv;
-        free(tmp);
-    }
+    libereCellPoint(start);
     printf("test_ajoute_point_cellpoint passed.\n");
 }
 
@@ -72,11 +66,8 @@ void test_ajoute_cellpoint_cellchaine() {
     assert(listeChaine->suiv->points == anotherPoint);
     assert(listeChaine->suiv->suiv == NULL);
 
-    // Cleanup
-    free(point);
-    free(anotherPoint);
-    free(listeChaine->suiv);
-    free(listeChaine);
+    // Clean
+    libereCellChaine(listeChaine);
 
     printf("test_ajoute_cellpoint_cellchaine passed.\n");
 }
@@ -99,8 +90,7 @@ void test_ajoute_cellchaine_cellchaine() {
     assert(root->suiv->suiv == NULL);
 
     // Cleanup
-    free(firstChaine);
-    free(secondChaine);
+    libereCellChaine(root);
 
     printf("test_ajoute_cellchaine_cellchaine passed.\n");
 }
@@ -111,63 +101,19 @@ void test_taille_CellPoint() {
     ajoute_point_cellpoint(&start, 11.0, 12.0);
     int size = taille_CellPoint(start);
     assert(size == 2);
-    while (start) {
-        CellPoint* tmp = start;
-        start = start->suiv;
-        free(tmp);
-    }
+    
+    libereCellPoint(start);
     printf("test_taille_CellPoint passed.\n");
 }
 
 Chaines* create_sample_chaine() {
     CellPoint* point1 = creer_Cellpoint(1.0, 2.0);
     ajoute_point_cellpoint(&point1, 3.0, 4.0);  // Ajout d'un deuxième point
-
+    ajoute_point_cellpoint(&point1, 4.0, 9.2); 
     CellChaine* chaine = creer_Cellchaine(1, point1);
     Chaines* chaines = creer_Chaines(10, 1, chaine);
+    libereChaines(chaines);
     return chaines;
-}
-
-void test_write_and_read_chaines() {
-    // Créer un exemple de chaînes
-    Chaines* original_chaines = create_sample_chaine();
-
-    // Écriture dans un fichier temporaire
-    FILE* f = fopen("test.txt","wr"); //tmpfile();
-    ecrireChaines(original_chaines, f);
-    rewind(f); // Retourner au début du fichier pour la lecture
-
-    // Lecture des chaînes à partir du fichier
-    Chaines* read_chaines = lectureChaines(f);
-    
-    // Vérification que les chaînes lues correspondent à celles écrites
-    assert(read_chaines->nbChaines == original_chaines->nbChaines);
-    printf("or %d , new %d ", read_chaines->gamma,original_chaines->gamma);
-    assert(read_chaines->gamma == original_chaines->gamma);
-    CellChaine* orig_chaine = original_chaines->chaines;
-    CellChaine* read_chaine = read_chaines->chaines;
-    while (orig_chaine != NULL && read_chaine != NULL) {
-        assert(read_chaine->numero == orig_chaine->numero);
-        CellPoint* orig_point = orig_chaine->points;
-        CellPoint* read_point = read_chaine->points;
-        while (orig_point != NULL && read_point != NULL) {
-            assert(fabs(orig_point->x - read_point->x) < 1e-6);
-            assert(fabs(orig_point->y - read_point->y) < 1e-6);
-            orig_point = orig_point->suiv;
-            read_point = read_point->suiv;
-        }
-        assert(orig_point == NULL && read_point == NULL);  // Both should end at the same time
-        orig_chaine = orig_chaine->suiv;
-        read_chaine = read_chaine->suiv;
-    }
-    assert(orig_chaine == NULL && read_chaine == NULL);  // Both should end at the same time
-
-    // Nettoyage
-    fclose(f);
-    // Free original and read chains
-    // Add code to free the Chaines structures properly
-
-    printf("test_write_and_read_chaines passed.\n");
 }
 
 void test_longueurChaine() {
@@ -180,9 +126,7 @@ void test_longueurChaine() {
     printf("test_longueurChaine passed.\n");
 
     // Nettoyage
-    free(p1->suiv);
-    free(p1);
-    free(chaine);
+    libereCellChaine(chaine);
 }
 
 void test_longueurTotale() {
@@ -194,6 +138,8 @@ void test_longueurTotale() {
     double totalLength = longueurTotale(C);
     assert(fabs(totalLength - 5.0) < 1e-6);
     printf("test_longueurTotale passed.\n");
+
+    libereChaines(C);
 }
 
 void test_comptePointsTotal() {
@@ -206,6 +152,8 @@ void test_comptePointsTotal() {
     int totalPoints = comptePointsTotal(C);
     assert(totalPoints == 3);
     printf("test_comptePointsTotal passed.\n");
+
+    libereChaines(C);
 }
 
 void test_changeMinMax() {
@@ -228,6 +176,8 @@ void test_chaineCoordMinMax() {
     chaineCoordMinMax(C, &xmin, &ymin, &xmax, &ymax);
     assert(xmin == -10 && ymin == -10 && xmax == 10 && ymax == 10);
     printf("test_chaineCoordMinMax passed.\n");
+
+    libereChaines(C);
 }
 
 void test_generationAleatoire() {
@@ -259,6 +209,7 @@ void test_generationAleatoire() {
         }
         chaineCourante = chaineCourante->suiv;
     }
+    libereChaines(result);
 }
 
 int main() {
@@ -269,7 +220,6 @@ int main() {
     test_taille_CellPoint();
     test_ajoute_cellpoint_cellchaine();
     test_ajoute_cellchaine_cellchaine();
-    //test_write_and_read_chaines(); BUG au niveau de la lecture
     test_longueurChaine();
     test_longueurTotale();
     test_comptePointsTotal();

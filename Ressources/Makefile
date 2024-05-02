@@ -1,67 +1,79 @@
-CC = clang
+CC = gcc
 CFLAGS = -Wall -Wextra -g
 
-all: chaine SVGwriter reseau hachage arbre SVGwriter TestChaine TestArbreQuat main Struct_File graphe TestGraphe TestReseau MesurePerformance
+all: chaine SVGwriter reseau hachage arbre SVGwriter TestChaine TestArbreQuat main Struct_File graphe TestGraphe TestReseau MesurePerformance ChaineMain ReconstitueReseau
 
-chaine: Chaine.c Chaine.h 
-	$(CC) $(CFLAGS) -c Chaine.c -o chaine.o 
+SVGwriter: src/SVGwriter.c include/SVGwriter.h 
+	$(CC) $(CFLAGS) -c src/SVGwriter.c -o SVGwriter.o
+	
+chaine: src/Chaine.c include/Chaine.h SVGwriter
+	$(CC) $(CFLAGS) -c src/Chaine.c -o chaine.o
 
-SVGwriter: SVGwriter.c SVGwriter.h chaine
-	$(CC) $(CFLAGS) -c SVGwriter.c -o SVGwriter.o
+reseau: src/Reseau.c include/Reseau.h chaine
+	$(CC) $(CFLAGS) -c src/Reseau.c -o reseau.o
 
-reseau: Reseau.c Reseau.h chaine
-	$(CC) $(CFLAGS) -c Reseau.c -o reseau.o
+hachage: src/Hachage.c include/Hachage.h reseau
+	$(CC) $(CFLAGS) -c src/Hachage.c -o hachage.o
 
-hachage: Hachage.c Hachage.h reseau
-	$(CC) $(CFLAGS) -c Hachage.c -o hachage.o
+arbre: src/ArbreQuat.c include/ArbreQuat.h reseau chaine
+	$(CC) $(CFLAGS) -c src/ArbreQuat.c -o ArbreQuat.o
 
-arbre: ArbreQuat.c ArbreQuat.h reseau chaine
-	$(CC) $(CFLAGS) -c ArbreQuat.c -o ArbreQuat.o
+Struct_File: src/Struct_File.c include/Struct_File.h
+	$(CC) $(CFLAGS) -c src/Struct_File.c -o Struct_File.o
 
-Struct_File: Struct_File.c Struct_File.h
-	$(CC) $(CFLAGS) -c Struct_File.c -o Struct_File.o
+graphe: src/Graphe.c include/Graphe.h reseau Struct_File
+	$(CC) $(CFLAGS) -c src/Graphe.c -o Graphe.o
 
-graphe: Graphe.c Graphe.h reseau Struct_File
-	$(CC) $(CFLAGS) -c Graphe.c -o Graphe.o
+TestChaine.o: tests/TestChaine.c
+	$(CC) $(CFLAGS) -c tests/TestChaine.c -o TestChaine.o
 
-SVGwriter: SVGwriter.c SVGwriter.h reseau
-	$(CC) $(CFLAGS) -c SVGwriter.c -o SVGwriter.o
+TestArbreQuat.o: tests/TestArbreQuat.c
+	$(CC) $(CFLAGS) -c tests/TestArbreQuat.c -o TestArbreQuat.o
 
-TestChaine.o: TestChaine.c
-	$(CC) $(CFLAGS) -c TestChaine.c -o TestChaine.o
+TestGraphe.o: tests/TestGraphe.c
+	$(CC) $(CFLAGS) -c tests/TestGraphe.c -o TestGraphe.o
 
-TestArbreQuat.o: TestArbreQuat.c
-	$(CC) $(CFLAGS) -c TestArbreQuat.c -o TestArbreQuat.o
+TestReseau.o: tests/TestReseau.c
+	$(CC) $(CFLAGS) -c tests/TestReseau.c -o TestReseau.o
 
-TestGraphe.o: TestGraphe.c
-		$(CC) $(CFLAGS) -c TestGraphe.c -o TestGraphe.o
+MesurePerformance.o: src/MesurePerformance.c
+	$(CC) $(CFLAGS) -c src/MesurePerformance.c -o MesurePerformance.o
 
-TestReseau.o: TestReseau.c
-		$(CC) $(CFLAGS) -c TestReseau.c -o TestReseau.o
+ReconstitueReseau.o: src/ReconstitueReseau.c
+	$(CC) $(CFLAGS) -c src/ReconstitueReseau.c -o ReconstitueReseau.o
 
-MesurePerformance.o: MesurePerformance.c
-		$(CC) $(CFLAGS) -c MesurePerformance.c -o MesurePerformance.o
+ChaineMain.o: src/ChaineMain.c
+	$(CC) $(CFLAGS) -c src/ChaineMain.c -o ChaineMain.o
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c main.c -o main.o
+main.o: src/main.c
+	$(CC) $(CFLAGS) -c src/main.c -o main.o
 
 TestChaine: TestChaine.o chaine
-	$(CC) $(CFLAGS) -o TestChaine TestChaine.o chaine.o
+	$(CC) $(CFLAGS) -o TestChaine TestChaine.o chaine.o SVGwriter.o
 
 TestArbreQuat: TestArbreQuat.o arbre reseau chaine
-	$(CC) $(CFLAGS) -o TestArbreQuat TestArbreQuat.o ArbreQuat.o reseau.o chaine.o
+	$(CC) $(CFLAGS) -o TestArbreQuat TestArbreQuat.o ArbreQuat.o reseau.o chaine.o SVGwriter.o
 
 TestGraphe: TestGraphe.o reseau chaine hachage graphe
-	$(CC) $(CFLAGS) -o TestGraphe TestGraphe.o hachage.o reseau.o chaine.o Graphe.o Struct_File.o
+	$(CC) $(CFLAGS) -o TestGraphe TestGraphe.o hachage.o reseau.o chaine.o Graphe.o Struct_File.o SVGwriter.o
 
 TestReseau: TestReseau.o reseau chaine 
-	$(CC) $(CFLAGS) -o TestReseau TestReseau.o reseau.o chaine.o
+	$(CC) $(CFLAGS) -o TestReseau TestReseau.o reseau.o chaine.o SVGwriter.o
 
 MesurePerformance: MesurePerformance.o reseau arbre hachage
-		$(CC) $(CFLAGS) -o MesurePerformance MesurePerformance.o reseau.o chaine.o hachage.o ArbreQuat.o
+	$(CC) $(CFLAGS) -o MesurePerformance MesurePerformance.o reseau.o chaine.o hachage.o ArbreQuat.o SVGwriter.o
+
+ReconstitueReseau: ReconstitueReseau.o reseau arbre hachage chaine SVGwriter
+	$(CC) $(CFLAGS) -o ReconstitueReseau ReconstitueReseau.o reseau.o ArbreQuat.o chaine.o hachage.o SVGwriter.o
+
+ChaineMain: ChaineMain.o chaine
+	$(CC) $(CFLAGS) -o ChaineMain ChaineMain.o chaine.o SVGwriter.o
 
 main: main.o arbre reseau chaine hachage SVGwriter
-	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o  SVGwriter.o
+	$(CC) $(CFLAGS) -o main main.o ArbreQuat.o reseau.o chaine.o hachage.o SVGwriter.o
 
 clean:
-	rm -f *.o TestChaine TestArbreQuat TestGraphe  main 
+	rm -f *.o TestChaine TestArbreQuat TestGraphe main MesurePerformance TestReseau tmp tmpAleatoire ChaineMain SVGwriter ReconstitueReseau 
+
+cleanDoc:
+	rm -f exo1.3.html reconstitueReseauArbre.html reconstitueReseauHachage.html reconstitueReseauListe.html

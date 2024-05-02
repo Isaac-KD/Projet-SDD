@@ -13,7 +13,7 @@ typedef struct {
 
 int h( int k,int M);
 int f( int x, int y );
-Reseau* reconstitueReseauHachage(Chaines *C, int M);
 Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage*H, double x, double y);
+Reseau* reconstitueReseauHachage(Chaines *C, int M);
 
 #endif

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include<time.h>
+#include "../include/SVGwriter.h"
 
 #define MAX_LINE_LENGTH 1024
 
@@ -33,6 +34,10 @@ CellPoint * creer_Cellpoint(double x, double y);
 CellChaine * creer_Cellchaine(int numero,CellPoint * points);
 Chaines * creer_Chaines(int gamma,int nbChaines, CellChaine * chaine);
 
+void libereCellPoint(CellPoint *p);
+void libereCellChaine(CellChaine *p);
+void libereChaines(Chaines *p);
+
 void ajoute_point_cellpoint(CellPoint **p, double x, double y);
 void ajoute_cellpoint_cellchaine(CellChaine **ch,int numero,CellPoint * p);
 void ajoute_cellchaine_cellchaine(CellChaine **src,CellChaine *new);
@@ -40,19 +45,20 @@ int taille_CellPoint(CellPoint * p);
 
 void affiche_CellPoint(CellPoint *p, FILE *f);
 void affiche_CellChaine(CellChaine *ch,FILE *f);
-void ecrireChaines(Chaines *C, FILE *f);
+void ecrireChaines(Chaines *C, FILE *f); //question 1.2
 
 CellChaine * lire_ligne(char * ligne);
-Chaines* lectureChaines(FILE *f);
+Chaines* lectureChaines(FILE *f);  // question 1.1
 
 double longueurChaine(CellChaine *c);
 
-void afficheChainesSVG(Chaines *C, char* nomInstance);
+void afficheChaineSVG(Chaines *C, char* nomInstance);
 double longueurTotale(Chaines *C);
 int comptePointsTotal(Chaines *C);
 
 void changeMinMax(double newx, double newy, double* xmin, double* ymin, double* xmax, double* ymax);
 void chaineCoordMinMax(Chaines* C, double* xmin, double*ymin, double* xmax, double* ymax);
 
- Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax);
+Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax);
+
 #endif	

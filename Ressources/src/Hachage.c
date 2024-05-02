@@ -1,4 +1,4 @@
-#include "Hachage.h"
+#include "../include/Hachage.h"
 
 int h( int k,int M){
     double A=(sqrt(5)-1)/2.0;

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "SVGwriter.h"
+#include "../include/SVGwriter.h"
 
 
 

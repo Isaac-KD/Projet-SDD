@@ -1,4 +1,4 @@
-#include "ArbreQuat.h"
+#include "../include/ArbreQuat.h"
 #import <math.h>
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX,double coteY){
     //printf(" xc: %lf, yc: %lf, coteX: %lf, coteY: %lf\n",xc,yc,coteX,coteY);
@@ -32,7 +32,7 @@ void insererNoeudArbre(Noeud* n, ArbreQuat** a, ArbreQuat* parent) {
     if ((*a)->noeud != NULL) {
         // Cas d'une feuille : transformer en noe dud interne et réinsérer les noeuds
         Noeud* actuel = (*a)->noeud;
-        if (sqrt(actuel->x* n->x + actuel->y *n->y) <= pow(10,-4)) return; // éviter les doublons
+        if (sqrt((actuel->x- n->x)*(actuel->x - n->x) + (actuel->y -n->y)*(actuel->y -n->y)) <= pow(10,-4)) return; // éviter les doublons 
 
         (*a)->noeud = NULL;
         insererNoeudArbre(actuel, a, parent);
@@ -89,21 +89,17 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
     return NULL;
 }
 
- 
-
-
 Reseau* reconstitueReseauArbre(Chaines* C){
     double xmin = INFINITY;  // Utilisez INFINITY défini dans <math.h>
     double ymin = INFINITY;
     double xmax = -INFINITY;
     double ymax = -INFINITY;    
     chaineCoordMinMax(C,&xmin,&ymin,&xmax,&ymax); // recuprer le min et le max d'une chaine
-    double coteX = (xmax-xmin); // dimension du cote X
-    double coteY = (ymax-ymin); // dimension du cote Y
+    double coteX = (xmax+xmin); // dimension du cote X
+    double coteY = (ymax+ymin); // dimension du cote Y
     /* Creaion des instances*/
     ArbreQuat * a = creerArbreQuat(coteX/2,coteY/2,coteX,coteY);
     Reseau* R = creerReseau(C->gamma);
-
     /* Parcours de la Chaine*/
     CellChaine * chaines = C->chaines; 
     while(chaines){

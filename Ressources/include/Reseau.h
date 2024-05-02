@@ -42,10 +42,18 @@ void ecrireReseau(Reseau *R, FILE *f);
 int nbLiaisons(Reseau *R);
 int nbCommodites(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
+
 Reseau * creerReseau(int gamma);
 Noeud* creerNoeud(int num, double x, double y);
 CellNoeud * creerCellNoeud( Noeud * n);
 CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB);
+
+void liberer_liste_CellNoeud(CellNoeud *liste);
+void liberer_noeud(Noeud *noeud);
+void liberer_liste_CellCommodite(CellCommodite *liste);
+void liberer_tous_les_noeuds(CellNoeud *liste);
+void liberer_reseau(Reseau *reseau);
+
 void insererVoisins(Noeud * noeud1, Noeud * noeud2);
 Noeud * insererReseau(Reseau * R, double x, double y);
 #endif

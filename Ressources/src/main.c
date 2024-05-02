@@ -1,7 +1,7 @@
-#include "Reseau.h"
-#include "ArbreQuat.h"
-#include "Hachage.h"
-#include "Chaine.h"
+#include "../include/Reseau.h"
+#include "../include/ArbreQuat.h"
+#include "../include/Hachage.h"
+#include "../include/Chaine.h"
 #include <stdio.h>
 #include <time.h>
 
