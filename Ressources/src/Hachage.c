@@ -86,17 +86,28 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
         // On passe a la chaine suivant
         chaine=chaine->suiv;  
     }
+    libererTableHachage(H);
     return R;
 }
 
-void libererTableHachage(TableHachage* H) {
-    if (H == NULL) return;  // Vérification de sécurité
-
-    // Boucle pour parcourir chaque emplacement de la table
-    for (int i = 0; i < H->tailleMax; i++) {
-        CellNoeud* courant = H->T[i];  // Pointeur pour parcourir chaque liste chaînée
-        liberer_tous_les_noeuds(courant);
+void libererTableHachage(TableHachage *tableHachage)
+{
+    if (tableHachage != NULL) // teste si la table de hachage n'est pas vide (sinon on fait rien)
+    {
+        CellNoeud *celluleNoeudCourant = NULL, *celluleNoeudSuivant = NULL; // pointeur vers la cellule de noeud courant et suivant dans la liste chainee de cellules stockee dans chaque case de la table
+        // on supprime la liste des cellules de noeuds stockes dans la table de hachage
+        for (int i = 0; i < tableHachage->tailleMax; i ++) // on parcourt la table de hachage
+        {
+            celluleNoeudCourant = tableHachage->T[i]; // on recupere la tete de liste stocke en case i de la table de hachage
+            while (celluleNoeudCourant != NULL)
+            {
+                // on supprime la cellule courante en gardant le pointeur suivant avant de free
+                celluleNoeudSuivant = celluleNoeudCourant->suiv;
+                free(celluleNoeudCourant);
+                celluleNoeudCourant = celluleNoeudSuivant; // on passe au suivant dans la liste
+            }
+        }
+        free(tableHachage->T);
+        free(tableHachage);
     }
-    free(H->T);  // Libérer le tableau de pointeurs
-    free(H);     // Libérer la structure de la table de hachage elle-même
 }

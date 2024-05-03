@@ -23,5 +23,5 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat*parent, doubl
 Reseau* reconstitueReseauArbre(Chaines* C);
 
 void afficherArbre(ArbreQuat* arbre, int level) ;
-
+void libererArbreQuat(ArbreQuat *abr);
 #endif

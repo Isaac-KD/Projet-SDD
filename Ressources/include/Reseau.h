@@ -50,6 +50,7 @@ CellCommodite * creerCellCommodite(Noeud *  extrA,Noeud * extrB);
 
 void liberer_liste_CellNoeud(CellNoeud *liste);
 void liberer_noeud(Noeud *noeud);
+void libererNoeudSimple(CellNoeud *nd);
 void liberer_liste_CellCommodite(CellCommodite *liste);
 void liberer_tous_les_noeuds(CellNoeud *liste);
 void liberer_reseau(Reseau *reseau);

@@ -12,15 +12,16 @@ void genererDonneesPerformanceReconstitueReseauListe() {
     int ymax = 5000;
 
     for (int nbChaines = 500; nbChaines <= 5000; nbChaines += 500) {
-
+        printf(" torur n liste %d\n", nbChaines/500);
         Chaines *chaines = generationAleatoire(nbChaines, nbPointsChaine, xmax, ymax);
         clock_t debut = clock();
-        reconstitueReseauListe(chaines);
+        Reseau* R = reconstitueReseauListe(chaines);
         clock_t fin = clock();
         double temps = (double)(fin - debut) / CLOCKS_PER_SEC;
         fprintf(f, "%d %f\n", nbChaines, temps);
 
-        // Libération de la mémoire si nécessaire
+        libereChaines(chaines);
+        liberer_reseau(R);
     }
 
     fclose(f);
@@ -37,31 +38,35 @@ for (int nbChaines = 500; nbChaines <= 5000; nbChaines += 500) {
         Chaines *chaines = generationAleatoire(nbChaines, nbPointsChaine, xmax, ymax);
 
         clock_t debut, fin;
-        double temps_arbre,temps_Hashage50, temps_Hashage100, temps_Hashage200;
+        double temps_arbre,temps_Hashage50;
 
         debut = clock();
-        reconstitueReseauArbre(chaines);
+        Reseau*R1 = reconstitueReseauHachage(chaines, 5000);
         fin = clock();
         temps_arbre = (double)(fin - debut) / CLOCKS_PER_SEC;
 
         debut = clock();
-        reconstitueReseauHachage(chaines, 50);
+        Reseau*R2 = reconstitueReseauHachage(chaines, 1500);
         fin = clock();
         temps_Hashage50 = (double)(fin - debut) / CLOCKS_PER_SEC;
-
+        /*
         debut = clock();
-        reconstitueReseauHachage(chaines, 150);
+        Reseau*R3 = reconstitueReseauHachage(chaines, 5000);
         fin = clock();
         temps_Hashage100 = (double)(fin - debut) / CLOCKS_PER_SEC;
 
         debut = clock();
-        reconstitueReseauHachage(chaines, 500);
+        Reseau*R4 = reconstitueReseauHachage(chaines, 50000);
         fin = clock();
         temps_Hashage200 = (double)(fin - debut) / CLOCKS_PER_SEC;
-
-        fprintf(f, "%d %f %f %f %f\n", nbChaines, temps_arbre, temps_Hashage50, temps_Hashage100, temps_Hashage200);
+        */
+        fprintf(f, "%d %f %f\n", nbChaines,temps_arbre,temps_Hashage50);
 
         // Libération de la mémoire si nécessaire
+        liberer_reseau(R1);
+        liberer_reseau(R2);
+        //liberer_reseau(R3);
+        //liberer_reseau(R4);
     }
 
     fclose(f);

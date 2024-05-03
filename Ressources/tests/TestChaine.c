@@ -41,8 +41,8 @@ void test_ajoute_point_cellpoint() {
     assert(fabs(start->y - 6.0) < 1e-6);
     ajoute_point_cellpoint(&start, 7.0, 8.0);
     assert(start->suiv != NULL);
-    assert(fabs(start->suiv->x - 7.0) < 1e-6);
-    assert(fabs(start->suiv->y - 8.0) < 1e-6);
+    assert(fabs(start->suiv->x - 5.0) < 1e-6);
+    assert(fabs(start->suiv->y - 6.0) < 1e-6);
     libereCellPoint(start);
     printf("test_ajoute_point_cellpoint passed.\n");
 }
@@ -61,9 +61,9 @@ void test_ajoute_cellpoint_cellchaine() {
     // Test adding second CellChaine
     CellPoint* anotherPoint = creer_Cellpoint(30.0, 40.0);
     ajoute_cellpoint_cellchaine(&listeChaine, 2, anotherPoint);
-    assert(listeChaine->suiv != NULL);
-    assert(listeChaine->suiv->numero == 2);
-    assert(listeChaine->suiv->points == anotherPoint);
+    assert(listeChaine->numero== 2);
+    assert(listeChaine->suiv->numero == 1);
+    assert(listeChaine->suiv->points == point);
     assert(listeChaine->suiv->suiv == NULL);
 
     // Clean
@@ -85,8 +85,8 @@ void test_ajoute_cellchaine_cellchaine() {
 
     // Test adding second CellChaine
     ajoute_cellchaine_cellchaine(&root, secondChaine);
-    assert(root->suiv == secondChaine);
-    assert(root->suiv->numero == 2);
+    assert(root->suiv == firstChaine);
+    assert(root->suiv->numero == 1);
     assert(root->suiv->suiv == NULL);
 
     // Cleanup
@@ -112,7 +112,6 @@ Chaines* create_sample_chaine() {
     ajoute_point_cellpoint(&point1, 4.0, 9.2); 
     CellChaine* chaine = creer_Cellchaine(1, point1);
     Chaines* chaines = creer_Chaines(10, 1, chaine);
-    libereChaines(chaines);
     return chaines;
 }
 
@@ -134,7 +133,7 @@ void test_longueurTotale() {
     ajoute_point_cellpoint(&p1, 3, 4);
     CellChaine *chaine = creer_Cellchaine(1, p1);
 
-    Chaines *C = creer_Chaines(1, 1, chaine);  // Un seul élément dans les chaînes
+    Chaines *C = creer_Chaines(1, 1, chaine);  
     double totalLength = longueurTotale(C);
     assert(fabs(totalLength - 5.0) < 1e-6);
     printf("test_longueurTotale passed.\n");
@@ -217,9 +216,9 @@ int main() {
     test_creer_Cellchaine();
     test_creer_Chaines();
     test_ajoute_point_cellpoint();
-    test_taille_CellPoint();
     test_ajoute_cellpoint_cellchaine();
     test_ajoute_cellchaine_cellchaine();
+    test_taille_CellPoint();
     test_longueurChaine();
     test_longueurTotale();
     test_comptePointsTotal();
@@ -233,7 +232,7 @@ int main() {
     FILE *g = fopen("tmp","w");
     ecrireChaines(c,g);
     fclose(g);
-
+    //libereChaines(c);
     printf("Tous les tests sont passés avec succès.\n");
     return 0;
 

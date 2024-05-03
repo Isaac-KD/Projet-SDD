@@ -30,6 +30,7 @@ void testInsererNoeudArbre(){
     insererNoeudArbre(n12, &arbre, arbre);
     insererNoeudArbre(n12, &arbre, arbre);
     afficherArbre(arbre, 0);
+    libererArbreQuat(arbre);
 }
 
 void afficherNoeud(Noeud* n) {
@@ -67,6 +68,8 @@ void testerRechercheCreeNoeudArbre() {
     Noeud* n4 = rechercheCreeNoeudArbre(R, &abr, arbre, 45.0, 45.0);
     afficherNoeud(n4);
     afficherArbre(arbre, 0);
+    libererArbreQuat(arbre);
+    liberer_reseau(R);
 }
 
 int main() {

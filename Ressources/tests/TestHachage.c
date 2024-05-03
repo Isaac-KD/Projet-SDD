@@ -22,9 +22,9 @@ void test_rechercheCreeNoeudHachage() {
 
     Noeud* n2 = rechercheCreeNoeudHachage(R, H, 1.0, 2.0);
     assert(n1 == n2);  // Vérifie que le même nœud est retourné pour les mêmes coordonnées
-
     liberer_reseau(R);  // Nettoyage
     libererTableHachage(H);  // Nettoyage
+    printf("Test rechercheCreeNoeudHachage passed.\n");
 }
 
 void test_reconstitueReseauHachage() {
@@ -38,9 +38,8 @@ void test_reconstitueReseauHachage() {
     assert(R->gamma == 3);
     assert( nbCommodites(R)==8);
     assert(nbLiaisons(R));
-
     liberer_reseau(R);
-    printf("Test reconstitueReseauListe passed.\n");
+    printf("Test reconstitueReseauHachage passed.\n");
 }
 
 int main(){

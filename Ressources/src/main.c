@@ -68,5 +68,9 @@ int main() {
     FILE * g = fopen("tmpAleatoire","w");
     ecrireChaines(CA,g);
     fclose(g);
+
+    libereChaines(CA);
+    libereChaines(C);
+    liberer_reseau(R2);
     return 0;
 }

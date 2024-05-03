@@ -8,7 +8,7 @@
 #include<time.h>
 #include "../include/SVGwriter.h"
 
-#define MAX_LINE_LENGTH 1024
+#define MAX_LINE_LENGTH 100000
 
 /* Liste chainee de points */
 typedef struct cellPoint{

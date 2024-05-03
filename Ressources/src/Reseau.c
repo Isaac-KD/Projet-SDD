@@ -276,23 +276,35 @@ void ecrireReseau(Reseau *R, FILE *f) {
         fprintf(stderr, "Erreur : Réseau ou fichier non valide\n");
         return;
     }
-    fprintf(f, "NbNoeuds : %d\n NbLiaisons : %d\n NbCommodites : %d\n Gamma : %d\n", R->nbNoeuds, nbLiaisons(R), nbCommodites(R), R->gamma);
+    fprintf(f, "NbNoeuds : %d\nNbLiaisons : %d\nNbCommodites : %d\nGamma : %d\n", R->nbNoeuds, nbLiaisons(R), nbCommodites(R), R->gamma);
     CellNoeud *noeud = R->noeuds;
     while (noeud != NULL) {
         fprintf(f, "v %d %.6f %.6f\n", noeud->nd->num, noeud->nd->x, noeud->nd->y);
         noeud = noeud->suiv;
     }
+    printf("\n");
     noeud = R->noeuds;
+
+    //creation sommet sommet
+    int** tab= calloc((R->nbNoeuds+1),sizeof(int*));
+    for (int i=0; i<=R->nbNoeuds;i++){
+        tab[i] = calloc((R->nbNoeuds),sizeof(int));
+    }
+
     while (noeud != NULL) {
         CellNoeud *voisin = noeud->nd->voisins;
+        tab[noeud->nd->num-1][noeud->nd->num]+=1;
         while (voisin != NULL) {
-            if (noeud->nd->num < voisin->nd->num) {
+            tab[noeud->nd->num][voisin->nd->num]+=1;
+            tab[voisin->nd->num][noeud->nd->num]+=1;
+            if (tab[noeud->nd->num][voisin->nd->num]<1 && (tab[noeud->nd->num][voisin->nd->num] <1 )){
                 fprintf(f, "l %d %d\n", noeud->nd->num, voisin->nd->num);
             }
             voisin = voisin->suiv;
         }
         noeud = noeud->suiv;
     }
+    printf("\n");
     CellCommodite *commodite = R->commodites;
     while (commodite != NULL) {
         fprintf(f, "k %d %d\n", commodite->extrA->num, commodite->extrB->num);

@@ -15,6 +15,8 @@ void utiliserListe(char* filename) {
     affiche_CellChaine(C->chaines,NULL);
     Reseau* R = reconstitueReseauListe(C);
     afficheReseauSVG(R,"reconstitueReseauListe.html");
+    liberer_reseau(R);
+    libereChaines(C);
 }
 
 void utiliserTableHachage(char* filename) {
@@ -24,6 +26,8 @@ void utiliserTableHachage(char* filename) {
     affiche_CellChaine(C->chaines,NULL);
     Reseau* R =reconstitueReseauHachage(C,100);
     afficheReseauSVG(R,"reconstitueReseauHachage.html");
+    liberer_reseau(R);
+    libereChaines(C);
 }
 
 void utiliserArbre(char* filename) {
@@ -32,6 +36,8 @@ void utiliserArbre(char* filename) {
     Chaines* C = lectureChaines(f);
     Reseau* R =reconstitueReseauArbre(C);
     afficheReseauSVG(R,"reconstitueReseauArbre.html");
+    liberer_reseau(R);
+    libereChaines(C);
 }
 
 int main() {

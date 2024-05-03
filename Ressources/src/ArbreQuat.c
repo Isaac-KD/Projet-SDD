@@ -149,3 +149,15 @@ void afficherArbre(ArbreQuat* arbre, int level) {
     afficherArbre(arbre->ne, level + 1);
     afficherArbre(arbre->no, level + 1);
 }
+
+void libererArbreQuat(ArbreQuat *abr)
+{
+    if (abr != NULL)
+    {
+        libererArbreQuat(abr->so);
+        libererArbreQuat(abr->se);
+        libererArbreQuat(abr->no);
+        libererArbreQuat(abr->ne);
+        free(abr);
+    }
+}

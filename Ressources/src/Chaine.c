@@ -49,13 +49,17 @@ void libereChaines(Chaines *p){
     libereCellChaine(p->chaines);
     free(p);
 }
+
+
 void ajoute_point_cellpoint(CellPoint **p, double x, double y) {
     CellPoint *new = creer_Cellpoint(x, y);
     CellPoint * tmp = *p;
     if(! tmp ) *p = new;
     else {
-        while( tmp->suiv) tmp = tmp->suiv;  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
-        tmp->suiv=new;
+        //while( tmp->suiv) tmp = tmp->suiv;  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
+        new->suiv = tmp;
+        *p = new;
+
     }
 }
 
@@ -64,8 +68,10 @@ void ajoute_cellpoint_cellchaine(CellChaine **ch,int numero,CellPoint * p){
     CellChaine *tmp = *ch;
     if(! tmp ) *ch = new;
     else {
-        while( tmp->suiv) tmp = tmp->suiv;  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
-        tmp->suiv=new;
+        //while( tmp->suiv) tmp = tmp->suiv;  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
+        //tmp->suiv=new;
+        new->suiv = tmp;
+        *ch = new;
     }
 }
 
@@ -76,10 +82,12 @@ void ajoute_cellchaine_cellchaine(CellChaine **src,CellChaine *new){
         return;
         }
     else { 
-        while(ch->suiv){  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
-            ch=ch->suiv;
-        }
-        ch->suiv=new;
+        //while(ch->suiv){  // on aurais pu juste ajouter en tete mais on a prefere ajouter en queu pour que ce soit la meme representation dans la strcture et dans le fichier(dans le meme ordre)
+         //   ch=ch->suiv;
+       // }
+       // ch->suiv=new;
+        new->suiv = ch;
+        *src = new;
     }
 }
 
@@ -134,34 +142,42 @@ void ecrireChaines(Chaines *C,FILE *f) {
         affiche_CellChaine(C->chaines,f);
 }
 
-CellChaine * lire_ligne(char * ligne){
-    if( ! ligne ) return NULL;
-    double x;
-    int numero,taille;
-    int i=0;
-    sscanf(ligne,"%d %d",&numero,&taille);
+CellChaine* lire_ligne(char* ligne) {
+    if (!ligne) return NULL;
 
-    double all_nb[taille*2];
-    while(sscanf(ligne,"%lf",&x)==1){
-        ligne += strcspn(ligne, " \t");
-        ligne += strcspn(ligne, "0123456789.-");
-        if(i>1) all_nb[i-2]=x;
-        i++;
+    int numero, taille, count;
+    if (sscanf(ligne, "%d %d%n", &numero, &taille, &count) != 2) return NULL;
+    ligne += count; // Avance après la lecture de numero et taille
+
+    CellPoint* head = NULL;
+    double x, y;
+    for (int i = 0; i < taille; ++i) {
+        if (sscanf(ligne, "%lf %lf%n", &x, &y, &count) != 2) {
+            // En cas d'erreur de lecture, nettoyer et sortir
+            while (head != NULL) {
+                CellPoint* tmp = head;
+                head = head->suiv;
+                free(tmp);
+            }
+            return NULL;
+        }
+        ajoute_point_cellpoint(&head, x, y);
+        ligne += count; // Avance après la lecture de chaque point
     }
-    
-    CellPoint * tmp= creer_Cellpoint(all_nb[0],all_nb[1]);
-    for(int j=2; j<2*taille; j+=2) {
-        ajoute_point_cellpoint(&tmp,all_nb[j],all_nb[j+1]);
-    }
-    return creer_Cellchaine(numero,tmp);
+
+    return creer_Cellchaine(numero, head);
 }
-
 
 Chaines* lectureChaines(FILE *f) {
     int gamma;
     int nbChaines;
     char ligne[MAX_LINE_LENGTH];
     rewind(f);// on ce place au debut du fichier
+    if (ferror(f)) {
+    fprintf(stderr, "Erreur lors de la réinitialisation du fichier\n");
+    fclose(f);
+    returnNULL;
+}
 
     if (fgets(ligne, sizeof(ligne), f) != NULL) {
         sscanf(ligne, "NbChain: %d", &nbChaines);
@@ -169,10 +185,12 @@ Chaines* lectureChaines(FILE *f) {
     if (fgets (ligne, sizeof(ligne), f) != NULL) {
         sscanf(ligne, "Gamma: %d", &gamma);
     }
+    printf(" step lecture 1\n");
     CellChaine *tmp = NULL;
     while(fgets(ligne, MAX_LINE_LENGTH, f) != NULL){
         ajoute_cellchaine_cellchaine(&tmp,lire_ligne(ligne));
     }
+    printf("step letcure 2\n");
     return creer_Chaines(gamma,nbChaines,tmp);
 }
 

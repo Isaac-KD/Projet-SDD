@@ -1,4 +1,6 @@
 #include "../include/Graphe.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 Arete* creeArete(int u  ,int v){
     Arete * new = (Arete *) malloc(sizeof(Arete));
@@ -26,6 +28,33 @@ Sommet* creeSommet(int num,double x,double y){
     new->num = num; new->x = x; new->y = y;
     new->L_voisin = NULL;
     return new;
+}
+
+void libererGraphe(Graphe** G){
+    if(!*G)
+        return;
+    for(int i=0; i<=(*G)->nbsom; i++){
+        if(!(*G)->T_som[i]) continue;
+        Cellule_arete* lv = (*G)->T_som[i]->L_voisin;
+        while(lv){
+            if(lv->a->u==-1 && lv->a->v==-1) free(lv->a);
+            else{
+                lv->a->u=-1;
+                lv->a->v=-1;
+            }
+            lv->a=NULL;
+            Cellule_arete* tmp = lv;
+            lv=lv->suiv;
+            free(tmp);
+        }
+        free((*G)->T_som[i]);
+        (*G)->T_som[i]=NULL;
+    }
+    if((*G)->T_som){free((*G)->T_som); (*G)->T_som=NULL;}
+    if((*G)->T_commod){free((*G)->T_commod); (*G)->T_commod=NULL;}
+
+    free(*G);
+    (*G)=NULL;
 }
 
 void affiche_graphe(Graphe *g, const char *filename) {
@@ -143,10 +172,6 @@ Graphe *creerGraphe(Reseau *r){
    }
     return graphe;
 }
-
-#include <stdio.h>
-#include <stdlib.h>
-
 // La fonction cheminPlusCourt calcule le plus court chemin dans un graphe non pondéré entre deux sommets u et v
 int cheminPlusCourt(Graphe *g, int u, int v) {
     if (g == NULL || u < 1 || v < 1 || u > g->nbsom || v > g->nbsom) {
@@ -283,20 +308,21 @@ Liste* retrouverChemin(Graphe *g, int u, int v){
 
 int reorganiseReseau(Reseau* r) {
     Graphe* g = creerGraphe(r);
-    int **utilisationArete = (int**)calloc(g->nbsom, sizeof(int*));
-    for (int i = 0; i < g->nbsom; i++) {
-        utilisationArete[i] = (int*)calloc(g->nbsom, sizeof(int));
+    int **utilisationArete = (int**)calloc(g->nbsom+1, sizeof(int*));
+    for (int i = 0; i < g->nbsom+1; i++) {
+        utilisationArete[i] = (int*)calloc(g->nbsom+1, sizeof(int));
     }
-
     // Calculer les chemins les plus courts et vérifier immédiatement l'utilisation des arêtes
     for (int i = 0; i < g->nbcommod; i++) {
         Liste* chemin = retrouverChemin(g, g->T_commod[i].e1, g->T_commod[i].e2);
         int prev = -1;
+
         while (chemin) {
             if (prev != -1) {
                 int u = prev;
                 int v = chemin->valeur;
                 utilisationArete[u][v]++;
+                utilisationArete[v][u]++;
                 // Vérifier la surcharge immédiatement après mise à jour
                 if (utilisationArete[u][v] > g->gamma) {
                     // Libération de la mémoire si nécessaire avant de retourner
@@ -307,11 +333,11 @@ int reorganiseReseau(Reseau* r) {
                     return 0;  // Faux, arête surchargée
                 }
             }
+
             prev = chemin->valeur;
             chemin = chemin->suiv;
         }
     }
-
     // Libération de la mémoire
     for (int j = 0; j < g->nbsom; j++) {
         free(utilisationArete[j]);
