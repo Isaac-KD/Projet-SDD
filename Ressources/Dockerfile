@@ -26,10 +26,14 @@ WORKDIR /app
 # Compiler le programme, en ajustant les chemins selon la nouvelle structure
 RUN gcc -o TestChaine tests/TestChaine.c src/Chaine.c src/SVGwriter.c -lm
 RUN gcc -o TestArbreQuat tests/TestArbreQuat.c src/ArbreQuat.c src/Reseau.c src/Chaine.c src/Graphe.c src/Struct_File.c src/SVGwriter.c -lm
+RUN gcc -o TestReseau tests/TestReseau.c src/Reseau.c src/Chaine.c src/SVGwriter.c -lm
+RUN gcc -o TestHachage tests/TestHachage.c src/Reseau.c src/Chaine.c src/SVGwriter.c src/Hachage.c -lm
+RUN gcc -o TestGraphe tests/TestGraphe.c src/ArbreQuat.c src/Reseau.c  src/Chaine.c src/Graphe.c src/Struct_File.c src/SVGwriter.c -lm
 
 # Définir la commande par défaut pour exécuter le programme avec Valgrind
-CMD ["valgrind", "--leak-check=full", "./TestChaine"]
+CMD ["valgrind", "--leak-check=full", "./TestGraphe"]
 
+# commande perssonel a lancer
 #  docker build -t nom_image .
 #   docker run --name nom_conteneur nom_image
 #   docker stop nom_conteneur

@@ -30,6 +30,7 @@ void test_rechercheCreeNoeudHachage() {
 void test_reconstitueReseauHachage() {
     FILE *f = fopen("00014_burma.cha","r");
     Chaines* C = lectureChaines(f);
+    fclose(f);
     Reseau* R = reconstitueReseauHachage(C, 10);
     
     // Vérifier les détails du réseau créé
@@ -39,6 +40,7 @@ void test_reconstitueReseauHachage() {
     assert( nbCommodites(R)==8);
     assert(nbLiaisons(R));
     liberer_reseau(R);
+    libereChaines(C);
     printf("Test reconstitueReseauHachage passed.\n");
 }
 

@@ -30,6 +30,18 @@ void testInsererNoeudArbre(){
     insererNoeudArbre(n12, &arbre, arbre);
     insererNoeudArbre(n12, &arbre, arbre);
     afficherArbre(arbre, 0);
+    free(n1);
+    free(n2);
+    free(n3);
+    free(n4);
+    free(n5);
+    free(n6);
+    free(n7);
+    free(n8);
+    free(n9);
+    free(n10);
+    free(n11);
+    free(n12);
     libererArbreQuat(arbre);
 }
 

@@ -10,5 +10,6 @@ int main(){
     fclose(g);
 
     afficheChaineSVG(C, "exo1.3");
+    libereChaines(C);
     return 0;
 }

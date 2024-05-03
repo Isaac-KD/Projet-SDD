@@ -1,8 +1,0 @@
-
-test nbLiaisons et nbCommodites Reseaux
-testhasahge
-test reconstituarbre
-
-corriger chaine pour que le noeud soit dans le bonne ordre 
-corrige nbLiaisons
-verifier le -lm si on import la bib math.h

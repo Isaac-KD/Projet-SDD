@@ -133,6 +133,7 @@ Reseau* reconstitueReseauArbre(Chaines* C){
 
         chaines = chaines->suiv;
     }
+    libererArbreQuat(a);
     return R;
 }
 
@@ -150,14 +151,17 @@ void afficherArbre(ArbreQuat* arbre, int level) {
     afficherArbre(arbre->no, level + 1);
 }
 
-void libererArbreQuat(ArbreQuat *abr)
-{
-    if (abr != NULL)
-    {
-        libererArbreQuat(abr->so);
-        libererArbreQuat(abr->se);
-        libererArbreQuat(abr->no);
-        libererArbreQuat(abr->ne);
+void libererArbreQuat(ArbreQuat *abr){
+    if (abr == NULL) return ;
+
+    if (abr -> noeud != NULL) {
         free(abr);
+        return ;
     }
+
+    libererArbreQuat(abr-> so);
+    libererArbreQuat(abr-> se);
+    libererArbreQuat(abr-> no);
+    libererArbreQuat(abr-> ne);
+    free(abr);
 }

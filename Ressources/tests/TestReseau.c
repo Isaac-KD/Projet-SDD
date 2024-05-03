@@ -29,7 +29,7 @@ void test_creerCellNoeud() {
     assert(cn != NULL);
     assert(cn->nd == n);
     assert(cn->suiv == NULL);
-    liberer_liste_CellNoeud(cn); // This also frees the Noeud
+    liberer_tous_les_noeuds(cn); 
     printf("Test creerCellNoeud passed.\n");
 }
 
@@ -78,8 +78,9 @@ void test_insererReseau() {
 void test_reconstitueReseauListe() {
     FILE *f = fopen("00014_burma.cha","r");
     Chaines* C = lectureChaines(f);
+    fclose(f);
     Reseau *R = reconstitueReseauListe(C);
-    
+
     // Vérifier les détails du réseau créé
     assert(R != NULL);
     assert(R->nbNoeuds == 12);
@@ -87,6 +88,7 @@ void test_reconstitueReseauListe() {
     assert( nbCommodites(R)==8);
     assert(nbLiaisons(R));
 
+    libereChaines(C);
     liberer_reseau(R);
     printf("Test reconstitueReseauListe passed.\n");
 }

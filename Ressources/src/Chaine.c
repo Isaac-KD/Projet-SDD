@@ -176,7 +176,7 @@ Chaines* lectureChaines(FILE *f) {
     if (ferror(f)) {
     fprintf(stderr, "Erreur lors de la réinitialisation du fichier\n");
     fclose(f);
-    returnNULL;
+    return NULL;
 }
 
     if (fgets(ligne, sizeof(ligne), f) != NULL) {
@@ -185,12 +185,10 @@ Chaines* lectureChaines(FILE *f) {
     if (fgets (ligne, sizeof(ligne), f) != NULL) {
         sscanf(ligne, "Gamma: %d", &gamma);
     }
-    printf(" step lecture 1\n");
     CellChaine *tmp = NULL;
     while(fgets(ligne, MAX_LINE_LENGTH, f) != NULL){
         ajoute_cellchaine_cellchaine(&tmp,lire_ligne(ligne));
     }
-    printf("step letcure 2\n");
     return creer_Chaines(gamma,nbChaines,tmp);
 }
 

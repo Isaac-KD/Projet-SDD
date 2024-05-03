@@ -249,66 +249,186 @@ int nbCommodites(Reseau *R) {
     return nbCommodites;
 }
 
-int nbLiaisons(Reseau *R) {
-    // Parcourir la liste des noeuds et compter le nombre de voisins de chaque noeud
-    int nbLiaisons = 0;
-    // Supposons que chaque noeud a une liste de voisins dans la structure Reseau
-    // Nous parcourons cette liste et comptons les voisins
-    // Ici,  on utilise un compteur pour illustrer le principe
-    CellNoeud *noeud = R->noeuds;
-    while (noeud != NULL) {
-        // Parcourir la liste des voisins du noeud actuel et incrémenter le compteur
-        int voisins = 0;
-        CellNoeud *voisin = noeud->nd->voisins;
-        while (voisin != NULL) {
-            voisins++;
-            voisin = voisin->suiv;
-        }
-        // Chaque liaison est comptée deux fois, une fois pour chaque noeud voisin
-        nbLiaisons += voisins / 2;
-        noeud = noeud->suiv;
+int nbLiaisons(Reseau *R)
+{
+    if (R == NULL) // teste si le reseau donne en argument existe
+    {
+        fprintf(stderr, "Erreur (fontion nbLiaisons): reseau donne en argument n'existe pas\n");
+        return -1;
     }
-    return nbLiaisons;
+    // sinon on parcourt la liste des cellules de noeuds
+    int nombreDeLiaisons = 0; // nombre total de liaisons dans le reseau R
+    CellNoeud *celluleDeNoeudCourante = R->noeuds; // stocke un pointeur vers la cellule de noeud courante dans la liste chaines 
+    Noeud *noeudCourant = NULL; // un pointeur vers le noeud courant
+    //allocation d'un tableau de booleen pour verifier si le noeud a ete deja vu
+    char *tableauDejaVus = (char *)calloc(R->nbNoeuds, sizeof(char));
+    char *tableauVoisinsDejaVus = NULL;
+    if (tableauDejaVus == NULL)
+    {
+        fprintf(stderr, "Erreur (fonction ecrireReseau) : allocation tableau de noeuds deja vus\n");
+        return -1;
+    }
+    //
+    while (celluleDeNoeudCourante != NULL) // boucle de parcours des cellules de noeuds
+    {
+        noeudCourant = celluleDeNoeudCourante->nd; // recuperation du noeud courant pointe par la cellule de noeud courante
+        if (noeudCourant == NULL) // teste si la cellule courante contient bien un noeud
+        {
+            fprintf(stderr, "Erreur (fonction nbLiaisons): il existe une cellule de noeud dans le reseau qui ne pointe vers aucuns noeuds\n");
+            return -1;
+        }
+        tableauVoisinsDejaVus = (char *)calloc(R->nbNoeuds, sizeof(char));
+        if (tableauVoisinsDejaVus == NULL)
+        {
+            fprintf(stderr, "Erreur (fonction ecrireReseau) : allocation tableau de voisins deja vus\n");
+            free(tableauDejaVus);
+            return -1;
+        }
+        tableauDejaVus[noeudCourant->num-1] = 1; // ce noeud est deja vu
+        // si oui on parcourt la liste chainee des voisins du noeud courant
+        CellNoeud *celluleDeNoeudVoisin = noeudCourant->voisins; // liste chainee des cellules de noeud des voisins du noeud courant
+        Noeud *noeudVoisinDuNoeudCourant = NULL; // noeud voisin du noeud courant
+        while (celluleDeNoeudVoisin != NULL) // boucle de parcourt de la liste des voisins (cellules)
+        {
+            noeudVoisinDuNoeudCourant = celluleDeNoeudVoisin->nd; // noeud voisin pointe par la cellule dans la liste des voisins
+            if (noeudVoisinDuNoeudCourant == NULL) // teste si la cellules contient bien un noeud
+            {
+                fprintf(stderr, "Erreur (fonction nbLiaisons): il existe une cellule de noeud (type Voisins) dans le reseau qui ne pointe vers aucuns noeuds\n");
+                return -1;
+            }
+            // pour chaque noeud, on verifie que ce noeud n'a pas ete deja vue dans la liste des noeuds du reseau parcourue
+            if (tableauDejaVus[noeudVoisinDuNoeudCourant->num - 1] == 0 && tableauVoisinsDejaVus[noeudVoisinDuNoeudCourant->num - 1] == 0) // teste si le voisin courant a deja ete trait'e et vu
+            {
+                // si jamais vue alors on inscrit la liaison (noeud courant <-> voisin courant)
+                nombreDeLiaisons ++;
+                tableauVoisinsDejaVus[noeudVoisinDuNoeudCourant->num - 1] = 1;
+            }
+            celluleDeNoeudVoisin = celluleDeNoeudVoisin->suiv; // on avance dans la liste des cellules voisines de la cellule courante(noeud courant)
+        }
+        free(tableauVoisinsDejaVus);
+        celluleDeNoeudCourante = celluleDeNoeudCourante->suiv; // on passe a  la cellule de noeud suivante
+    }
+    free(tableauDejaVus);
+    return nombreDeLiaisons;
 }
 
-void ecrireReseau(Reseau *R, FILE *f) {
-    if (R == NULL || f == NULL) {
-        fprintf(stderr, "Erreur : Réseau ou fichier non valide\n");
+
+void ecrireReseau(Reseau *R, FILE *f)
+{
+    if (R == NULL) // teste si le reseau donne en argument existe reelement
+    {
+        fprintf(stderr, "Erreur (fonction ecrireReseau): le reseau donne en argument n'existe pas\n");
         return;
     }
-    fprintf(f, "NbNoeuds : %d\nNbLiaisons : %d\nNbCommodites : %d\nGamma : %d\n", R->nbNoeuds, nbLiaisons(R), nbCommodites(R), R->gamma);
-    CellNoeud *noeud = R->noeuds;
-    while (noeud != NULL) {
-        fprintf(f, "v %d %.6f %.6f\n", noeud->nd->num, noeud->nd->x, noeud->nd->y);
-        noeud = noeud->suiv;
+    if (f == NULL) // teste si le flux en ecriture est correctement donne en argument
+    {
+        fprintf(stderr, "Erreur (fonction ecrireReseau): le flux en ecriture donne en argument n'existe pas\n");
+        return;
     }
-    printf("\n");
-    noeud = R->noeuds;
+    // on inscrit dans le fichier le nombre de noeuds dans le reseau (Champs nbNoeuds de la structure Reseau)
+    fprintf(f, "NbNoeuds: %d\n", R->nbNoeuds);
+    //
+    // on inscrit dans le fichier le nombre de liaisons dans le reseau en appelant la fonction nbLiaisons sur le reseau R
+    fprintf(f, "NbLiaisons: %d\n", nbLiaisons(R));
+    //
+    // on inscrit dans le fichier le nombre de commodites dans le reseau en appelant la fonction nbCommodites sur le reseau R
+    fprintf(f, "NbCommodites: %d\n", nbCommodites(R));
+    //
+    // on inscrit gamma le nombre maximum de fibre par liaison (champ gamma de Reseau)
+    fprintf(f, "Gamma: %d\n\n", R->gamma);
+    //
 
-    //creation sommet sommet
-    int** tab= calloc((R->nbNoeuds+1),sizeof(int*));
-    for (int i=0; i<=R->nbNoeuds;i++){
-        tab[i] = calloc((R->nbNoeuds),sizeof(int));
-    }
-
-    while (noeud != NULL) {
-        CellNoeud *voisin = noeud->nd->voisins;
-        tab[noeud->nd->num-1][noeud->nd->num]+=1;
-        while (voisin != NULL) {
-            tab[noeud->nd->num][voisin->nd->num]+=1;
-            tab[voisin->nd->num][noeud->nd->num]+=1;
-            if (tab[noeud->nd->num][voisin->nd->num]<1 && (tab[noeud->nd->num][voisin->nd->num] <1 )){
-                fprintf(f, "l %d %d\n", noeud->nd->num, voisin->nd->num);
-            }
-            voisin = voisin->suiv;
+    //on inscrit la liste des noeud contenue dans le reseau
+    CellNoeud *celluleDeNoeudCourante = R->noeuds; // pointeur vers la cellule de noeud courante
+    Noeud *noeudCourant = NULL; // noeud contenu dans la cellule courante
+    while (celluleDeNoeudCourante != NULL) // boucle de parcourt de la liste chainee des cellules de noeud du reseau R
+    {
+        noeudCourant = celluleDeNoeudCourante->nd; // recuperation du noeud contenu dans la cellule de noeud courante
+        if (noeudCourant == NULL) // teste si la cellule de noeud courante contient bien une noeud
+        {
+            fprintf(stderr, "Erreur (fonction ecrireReseau): il existe une cellule de noeud qui ne contient aucun noeuds\n");
+            return;
         }
-        noeud = noeud->suiv;
+        // si oui on inscrit son numero, ses coordonnes
+        fprintf(f, "v %d %.6f %.6f\n", noeudCourant->num, noeudCourant->x, noeudCourant->y);
+        //
+        celluleDeNoeudCourante = celluleDeNoeudCourante->suiv; // on passe a la cellule suivante
     }
-    printf("\n");
-    CellCommodite *commodite = R->commodites;
-    while (commodite != NULL) {
-        fprintf(f, "k %d %d\n", commodite->extrA->num, commodite->extrB->num);
-        commodite = commodite->suiv;
+
+    fprintf(f, "\n"); // on saute une ligne pour separer les noeuds des liaisons
+
+    //allocation d'un tableau de booleen pour verifier si le noeud a ete deja vu
+    char *tableauDejaVus = (char *)calloc(R->nbNoeuds, sizeof(char));
+    char *tableauVoisinsDejaVus = NULL;
+    if (tableauDejaVus == NULL)
+    {
+        fprintf(stderr, "Erreur (fonction ecrireReseau) : allocation tableau de noeuds deja vus\n");
+        return;
+    }
+    //
+    // on inscrit la liste des liaisons en parcourant les voisins de chaque noeud du reseau
+    celluleDeNoeudCourante = R->noeuds; // pointeur vers la cellule de noeud courante
+    noeudCourant = NULL; // noeud contenu dans la cellule courante
+    while (celluleDeNoeudCourante != NULL) // boucle de parcourt de la liste chainee des cellules de noeud du reseau R
+    {
+        noeudCourant = celluleDeNoeudCourante->nd; // recuperation du noeud contenu dans la cellule de noeud courante
+        if (noeudCourant == NULL) // teste si la cellule de noeud courante contient bien une noeud
+        {
+            fprintf(stderr, "Erreur (fonction ecrireReseau): il existe une cellule de noeud qui ne contient aucun noeuds\n");
+            return;
+        }
+        tableauVoisinsDejaVus = (char *)calloc(R->nbNoeuds, sizeof(char));
+        if (tableauVoisinsDejaVus == NULL)
+        {
+            fprintf(stderr, "Erreur (fonction ecrireReseau) : allocation tableau de voisins deja vus\n");
+            free(tableauDejaVus);
+            return;
+        }
+        tableauDejaVus[noeudCourant->num-1] = 1; // ce noeud est deja vu
+        // si oui on parcourt la liste chainee des voisins du noeud courant
+        CellNoeud *celluleNoeudVoisinCourant = noeudCourant->voisins; // pointeur vers la cellule contenant le voisin courant
+        Noeud *voisinCourant = NULL; // noeud representant le voisin du noeud courant
+        while (celluleNoeudVoisinCourant != NULL) // boucle de parcourt de la liste chainee des voisins du noeud courant
+        {
+            voisinCourant = celluleNoeudVoisinCourant->nd; // recuperation du voisin du noeud courant
+            if (voisinCourant == NULL) // teste si la cellule courante (cellule contenant un voisin) contient bien un noeud
+            {
+                fprintf(stderr, "Erreur (fonction ecrireReseau): il existe une cellule de noeud (type Voisin) qui ne contient aucun noeuds\n");
+                return;
+            }
+            if (tableauDejaVus[voisinCourant->num-1] == 0 && tableauVoisinsDejaVus[voisinCourant->num - 1] == 0) // teste si le voisin courant a deja ete trait'e et vu
+            {
+                // si jamais vue alors on inscrit la liaison (noeud courant <-> voisin courant)
+                fprintf(f, "l %d %d\n", voisinCourant->num, noeudCourant->num);
+                tableauVoisinsDejaVus[voisinCourant->num - 1] = 1;
+            }
+            celluleNoeudVoisinCourant = celluleNoeudVoisinCourant->suiv; // on passe au voisin suivant du noeud courant
+        }
+        free(tableauVoisinsDejaVus);
+        celluleDeNoeudCourante = celluleDeNoeudCourante->suiv; // on passe a la cellule de noeud suivant dans le reseau R
+    }
+    free(tableauDejaVus);
+    fprintf(f, "\n"); // on saute de ligne pour marquer une separation entre le liaisons et les commodites 
+
+    // on inscrit la liste des commodites en parcourant les commodites du reseau R
+    CellCommodite *commoditeCourante = R->commodites; // pointeur vers la commodite courante
+    while (commoditeCourante != NULL) // boucle de parcourt de la liste des commodites
+    {
+        Noeud *extrA = NULL, *extrB = NULL; // on definit les noeud extremites de chaque commodite
+        // recuperation des noeud extremes A et B de la commodite courante
+        extrA = commoditeCourante->extrA;
+        extrB = commoditeCourante->extrB;
+        //
+        if (extrA == NULL || extrB == NULL) // teste si l'une des extremites de la commodite existe (pointe par la commodite courante)
+        {
+            fprintf(stderr, "Erreur (fonction ecrireReseau): il existe une commodite dont une extremite ne pointe vers aucun noeud du reseau\n");
+            return;
+        }
+        // si les deux extremites existent (sans tester si c'est les memes dans le cas d'une commidite de longueur 1)
+        // on inscrit les numeros des deux extremites
+        fprintf(f, "k %d %d\n", extrA->num, extrB->num);
+        //
+        commoditeCourante = commoditeCourante->suiv; // on passe a la commidite suivante dans la liste chainee
     }
 }
 

@@ -315,6 +315,7 @@ int reorganiseReseau(Reseau* r) {
     // Calculer les chemins les plus courts et vérifier immédiatement l'utilisation des arêtes
     for (int i = 0; i < g->nbcommod; i++) {
         Liste* chemin = retrouverChemin(g, g->T_commod[i].e1, g->T_commod[i].e2);
+        Liste* tmp = chemin;
         int prev = -1;
 
         while (chemin) {
@@ -326,10 +327,12 @@ int reorganiseReseau(Reseau* r) {
                 // Vérifier la surcharge immédiatement après mise à jour
                 if (utilisationArete[u][v] > g->gamma) {
                     // Libération de la mémoire si nécessaire avant de retourner
-                    for (int j = 0; j < g->nbsom; j++) {
+                    for (int j = 0; j < g->nbsom+1; j++) {
                         free(utilisationArete[j]);
                     }
                     free(utilisationArete);
+                    libereListe(tmp);
+                    libererGraphe(&g);
                     return 0;  // Faux, arête surchargée
                 }
             }
@@ -337,13 +340,14 @@ int reorganiseReseau(Reseau* r) {
             prev = chemin->valeur;
             chemin = chemin->suiv;
         }
+        libereListe(tmp);
     }
     // Libération de la mémoire
-    for (int j = 0; j < g->nbsom; j++) {
+    for (int j = 0; j < g->nbsom+1; j++) {
         free(utilisationArete[j]);
     }
     free(utilisationArete);
-    
+    libererGraphe(&g);
     return 1;  // Vrai, aucune arête surchargée
 }
 

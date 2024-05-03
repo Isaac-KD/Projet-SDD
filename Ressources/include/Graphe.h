@@ -45,6 +45,9 @@ Cellule_arete* creeCellule_arete( Arete * a);
 Sommet* creeSommet(int num,double x,double y);
 void libererGraphe(Graphe** G);
 
+void ajouterEnTete(Liste **tete, int valeur) ;
+void libereListe(Liste *tete);
+
 // permet d'inserer l'arete {u,v} dans le sommet s si il n'existe pas deja
 void insererAreteVoisin( Sommet*s,Sommet*actuel);
 void affiche_graphe(Graphe *g, const char *filename);

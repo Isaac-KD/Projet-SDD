@@ -232,7 +232,7 @@ int main() {
     FILE *g = fopen("tmp","w");
     ecrireChaines(c,g);
     fclose(g);
-    //libereChaines(c);
+    libereChaines(c);
     printf("Tous les tests sont passés avec succès.\n");
     return 0;
 
